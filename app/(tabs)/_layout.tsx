@@ -1,43 +1,77 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
-import { Platform } from 'react-native';
+import Logo from "@/assets/images/logo.svg";
+import {
+  CalendarIcon,
+  CircleCheckIcon,
+  ClipboardListIcon,
+  UserIcon,
+} from "@/components/ui/Icons";
+import { Colors } from "@/constants/Colors";
+import { Tabs } from "expo-router";
+import React from "react";
+import { View } from "react-native";
 
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+const ICON_SIZE = 20;
+const LOGO_SIZE = 30;
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
-          },
-          default: {},
-        }),
-      }}>
+        tabBarActiveTintColor: Colors.primary.default,
+        tabBarInactiveTintColor: Colors.black.default,
+        tabBarStyle: { backgroundColor: Colors.white.default },
+
+        headerShown: true,
+        headerStyle: {
+          backgroundColor: Colors.white.default,
+          height: 65,
+        },
+        headerTintColor: Colors.primary.default,
+        headerTitleAlign: "center",
+        headerTitleStyle: { fontSize: 17, fontWeight: "bold" },
+        headerLeft: () => (
+          <View className="pl-3">
+            <Logo width={LOGO_SIZE} height={LOGO_SIZE} />
+          </View>
+        ),
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          tabBarLabel: "Activos",
+          headerTitle: "Servicios Activos",
+          tabBarIcon: ({ color }) => (
+            <ClipboardListIcon color={color} size={ICON_SIZE} />
+          ),
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="completed"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          tabBarLabel: "Completados",
+          headerTitle: "Servicios Completados",
+          tabBarIcon: ({ color }) => (
+            <CircleCheckIcon color={color} size={ICON_SIZE} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="calendar"
+        options={{
+          title: "Calendario",
+          tabBarIcon: ({ color }) => (
+            <CalendarIcon color={color} size={ICON_SIZE} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: "Perfil",
+          tabBarIcon: ({ color }) => (
+            <UserIcon color={color} size={ICON_SIZE} />
+          ),
         }}
       />
     </Tabs>
