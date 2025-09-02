@@ -1,31 +1,31 @@
 import Screen from "@/components/Screen";
-import { ServiceCard } from "@/components/ui/Card";
-import { Colors } from "@/constants/Colors";
+import { ActiveService } from "@/components/ServiceCard";
+import Badge from "@/components/ui/Badge";
+import { Card } from "@/components/ui/Card";
 import { Link } from "expo-router";
-import { Pressable, Text } from "react-native";
+import { Pressable } from "react-native";
 
 export default function ActiveServices() {
   return (
     <Screen>
-      <Link href={`/${123}`}>Link para otro lado</Link>
-      <Text
-        className="py-1 px-3 mb-4 text-sm rounded-lg self-start"
-        style={{
-          backgroundColor: Colors.primary.background,
-          color: Colors.primary.default,
-        }}
-      >
-        5 servicios
-      </Text>
+      <Badge variant="active">3 servicios</Badge>
       {/* Card */}
       <Link href={`/${123}`} asChild>
         <Pressable>
-          <ServiceCard type="active" />
+          <Card variant="active">
+            <ActiveService />
+          </Card>
         </Pressable>
       </Link>
 
       {/* Card 2 */}
-      <ServiceCard type="active" />
+      <Link href={`/${456}`} asChild>
+        <Pressable>
+          <Card variant="active">
+            <ActiveService />
+          </Card>
+        </Pressable>
+      </Link>
     </Screen>
   );
 }
