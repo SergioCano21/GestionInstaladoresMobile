@@ -21,8 +21,10 @@ export function ActiveService() {
         <ChevronRightIcon color={Colors.gray.default} size={22} />
       </View>
       <CardTitle>Nombre Cliente</CardTitle>
-      <InfoRow icon="clock">9:00AM - 12:00PM</InfoRow>
-      <InfoRow icon="map-pin">Dirección Completa del Cliente 3300</InfoRow>
+      <View className="mt-1">
+        <InfoRow icon="clock">9:00AM - 12:00PM</InfoRow>
+        <InfoRow icon="map-pin">Dirección Completa del Cliente 3300</InfoRow>
+      </View>
     </>
   );
 }
@@ -38,18 +40,20 @@ export function CompletedService() {
         </View>
       </View>
       <CardTitle>Nombre Cliente</CardTitle>
-      <InfoRow icon="calendar">15 Enero 2025</InfoRow>
-      <InfoRow icon="map-pin">Dirección Completa del Cliente 3300</InfoRow>
-      <View className="flex-row items-center justify-between mt-1">
-        <Text className="text-base" style={{ color: Colors.gray.dark }}>
-          Ganancia:
-        </Text>
-        <Text
-          className="text-xl font-bold"
-          style={{ color: Colors.green.medium }}
-        >
-          $650
-        </Text>
+      <View className="mt-1">
+        <InfoRow icon="calendar">15 Enero 2025</InfoRow>
+        <InfoRow icon="map-pin">Dirección Completa del Cliente 3300</InfoRow>
+        <View className="flex-row items-center justify-between mt-1">
+          <Text className="text-base" style={{ color: Colors.gray.dark }}>
+            Ganancia:
+          </Text>
+          <Text
+            className="text-xl font-bold"
+            style={{ color: Colors.green.medium }}
+          >
+            $650
+          </Text>
+        </View>
       </View>
     </>
   );

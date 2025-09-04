@@ -6,6 +6,11 @@ import {
   Clock,
   MapPin,
   User,
+  FileText,
+  Store,
+  Camera,
+  Image,
+  Info,
 } from "lucide-react-native";
 
 interface Props {
@@ -33,4 +38,19 @@ export const ClockIcon = ({ color, size }: Props) => {
 };
 export const MapPinIcon = ({ color, size }: Props) => {
   return <MapPin color={color} size={size} />;
+};
+export const FileTextIcon = ({ color, size }: Props) => {
+  return <FileText color={color} size={size} />;
+};
+export const StoreIcon = ({ color, size }: Props) => {
+  return <Store color={color} size={size} />;
+};
+export const CameraIcon = ({ color, size }: Props) => {
+  return <Camera color={color} size={size} />;
+};
+export const ImageIcon = ({ color, size }: Props) => {
+  return <Image color={color} size={size} />;
+};
+export const InfoIcon = ({ color, size }: Props) => {
+  return <Info color={color} size={size} />;
 };

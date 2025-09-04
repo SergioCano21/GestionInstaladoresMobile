@@ -24,7 +24,6 @@ export default function TabLayout() {
         headerShown: true,
         headerStyle: {
           backgroundColor: Colors.white.default,
-          height: 65,
         },
         headerTintColor: Colors.primary.default,
         headerTitleAlign: "center",

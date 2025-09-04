@@ -3,6 +3,7 @@ import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import "react-native-reanimated";
 import "../global.css";
+import { Colors } from "@/constants/Colors";
 
 export default function RootLayout() {
   const [loaded] = useFonts({
@@ -16,7 +17,14 @@ export default function RootLayout() {
 
   return (
     <>
-      <Stack>
+      <Stack
+        screenOptions={{
+          headerTintColor: Colors.primary.default,
+          headerTitleStyle: { fontSize: 17, fontWeight: "bold" },
+          headerBackButtonDisplayMode: "minimal",
+          headerShadowVisible: true,
+        }}
+      >
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
       </Stack>

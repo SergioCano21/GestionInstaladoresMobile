@@ -1,17 +1,21 @@
 import { Colors } from "@/constants/Colors";
-import { Text, View } from "react-native";
+import { Text, View, ViewStyle } from "react-native";
 
 export function Card({
   children,
-  variant,
+  variant = "normal",
+  classes = "",
+  style = {},
 }: {
   children: React.ReactNode;
-  variant: "active" | "completed" | "normal";
+  variant?: "active" | "completed" | "normal";
+  classes?: string;
+  style?: ViewStyle;
 }) {
   const borderClass = variant !== "normal" ? "border-l-4" : "";
   return (
     <View
-      className={`p-5 rounded-xl mb-4 ${borderClass}`}
+      className={`p-5 rounded-xl mb-4 ${borderClass} ${classes}`}
       style={{
         backgroundColor: Colors.white.default,
         borderLeftColor:
@@ -20,6 +24,7 @@ export function Card({
             : variant === "completed"
               ? Colors.green.medium
               : undefined,
+        ...style,
       }}
     >
       {children}
@@ -29,14 +34,12 @@ export function Card({
 
 export function CardTitle({ children }: { children: React.ReactNode }) {
   return (
-    <View className="mb-1">
-      <Text
-        className="text-lg font-semibold"
-        style={{ color: Colors.black.default }}
-      >
-        {children}
-      </Text>
-    </View>
+    <Text
+      className="text-lg font-semibold"
+      style={{ color: Colors.black.default }}
+    >
+      {children}
+    </Text>
   );
 }
 
