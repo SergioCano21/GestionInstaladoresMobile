@@ -11,6 +11,7 @@ export default function Screen({ children, scrollEnabled = true }: Props) {
       className="flex-1 p-4"
       style={{ backgroundColor: Colors.gray.light }}
       scrollEnabled={scrollEnabled}
+      contentContainerStyle={{ flexGrow: 1 }}
     >
       {children}
     </ScrollView>

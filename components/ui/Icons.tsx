@@ -11,6 +11,7 @@ import {
   Camera,
   Image,
   Info,
+  X,
 } from "lucide-react-native";
 
 interface Props {
@@ -53,4 +54,7 @@ export const ImageIcon = ({ color, size }: Props) => {
 };
 export const InfoIcon = ({ color, size }: Props) => {
   return <Info color={color} size={size} />;
+};
+export const XIcon = ({ color, size }: Props) => {
+  return <X color={color} size={size} />;
 };

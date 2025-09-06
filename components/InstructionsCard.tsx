@@ -4,7 +4,7 @@ import { InfoIcon } from "./ui/Icons";
 const ICON_SIZE = 20;
 export function InstructionsCard() {
   return (
-    <View className="bg-blue-50 p-5 rounded-xl mb-4 border border-blue-200 my-4">
+    <View className="bg-blue-50 p-5 rounded-xl border border-blue-200 my-4">
       <View className="flex-row gap-2">
         <View className="bg-blue-500 w-10 h-10 rounded-full justify-center items-center">
           <InfoIcon color="#fff" size={ICON_SIZE} />

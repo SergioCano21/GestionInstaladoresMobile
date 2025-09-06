@@ -20,9 +20,17 @@ export const Colors = {
     default: "#15803D",
     background: "#DCFCE7",
     medium: "#22C55E",
+    startUnderlay: "#22C55E",
+    endUnderlay: "#15803d",
+    start: "#86efac",
+    end: "#10b981",
   },
   yellow: {
-    default: "#856404",
+    default: "#a16207",
     background: "#fff3cd",
+    startUnderlay: "#EAB308",
+    endUnderlay: "#a16207",
+    start: "#fde047",
+    end: "#eab308",
   },
 };

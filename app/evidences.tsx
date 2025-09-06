@@ -1,18 +1,20 @@
 import Screen from "@/components/Screen";
 import { Stack } from "expo-router";
-import { View, Text, FlatList } from "react-native";
+import { View, Text, Image, Alert, TouchableOpacity } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
-import { CameraIcon, InfoIcon } from "@/components/ui/Icons";
-import { Colors } from "@/constants/Colors";
 import {
   GalleryButtonCard,
   PhotoButtonCard,
-} from "@/components/ui/EvidenceButtonCard";
+} from "@/components/EvidenceButtonCard";
 import { InstructionsCard } from "@/components/InstructionsCard";
+import EvidencesEmptyState from "@/components/EvidencesEmptyState";
+import { ImageIcon, XIcon } from "@/components/ui/Icons";
+import { Colors } from "@/constants/Colors";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function ImagesScreen() {
-  const [image, setImage] = useState<string | null>(null);
+  const [images, setImages] = useState<string[]>([]);
 
   const pickImageFromCamera = async () => {
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
@@ -22,61 +24,140 @@ export default function ImagesScreen() {
     }
 
     const result = await ImagePicker.launchCameraAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: false,
       aspect: [16, 9],
     });
 
     if (!result.canceled) {
+      if (images.length >= 6) {
+        Alert.alert(
+          "Límite alcanzado",
+          "Elimina imágenes para seguir subiendo"
+        );
+        return;
+      }
+      setImages([...images, result.assets[0].uri]);
       console.log(result.assets[0]);
-      // Aquí puedes mostrar una vista previa, subirla a un servidor, etc.
     }
   };
 
   const pickImageFromGallery = async () => {
-    // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images"],
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
+      allowsEditing: false,
+      aspect: [16, 9],
     });
 
-    console.log(result);
-
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
+      if (images.length >= 6) {
+        Alert.alert(
+          "Límite alcanzado",
+          "Elimina imágenes para seguir subiendo"
+        );
+        return;
+      }
+      setImages([...images, result.assets[0].uri]);
     }
   };
 
+  const removeImage = (index: number) => {
+    setImages((prevImages) => {
+      const notRemoved = [...prevImages];
+      notRemoved.splice(index, 1);
+      return notRemoved;
+    });
+  };
+
   return (
-    <Screen>
-      <Stack.Screen options={{ headerTitle: "Evidencias Fotográficas" }} />
+    <>
+      <Screen>
+        <Stack.Screen options={{ headerTitle: "Evidencias Fotográficas" }} />
+        {/* Button Cards */}
+        <View className="flex-row gap-4">
+          <PhotoButtonCard pickImage={pickImageFromCamera} />
+          <GalleryButtonCard pickImage={pickImageFromGallery} />
+        </View>
 
-      {/* Button Cards */}
-      <View className="flex-row gap-4">
-        <PhotoButtonCard />
-        <GalleryButtonCard />
-      </View>
+        {/* Instruction Card */}
+        <InstructionsCard />
 
-      {/* Instruction Card */}
-      <InstructionsCard />
+        {/* Empty state */}
+        {images.length === 0 && <EvidencesEmptyState />}
 
-      {/* Empty state */}
-      <View className="items-center my-8">
-        <CameraIcon size={40} color={Colors.gray.default} />
-        <Text className="font-semibold text-lg mt-6 mb-1">
-          No hay fotos seleccionadas
-        </Text>
-        <Text
-          className="text-base text-center"
-          style={{ color: Colors.gray.dark }}
-        >
-          Usa los botones de arriba para tomar fotos o seleccionar de tu galería
-        </Text>
-      </View>
+        {/* Photos added */}
+        {images.length !== 0 && (
+          <>
+            <View className="mt-2 mb-4">
+              <View className="flex-row gap-2 items-center">
+                <ImageIcon color={Colors.primary.default} size={20} />
+                <Text
+                  className="font-semibold text-lg"
+                  style={{ color: Colors.black.default }}
+                >
+                  Fotos Seleccionadas ({images.length})
+                </Text>
+              </View>
+              <View className="flex-row flex-wrap justify-between mt-4">
+                {images.map((uri, i) => (
+                  <View key={i} className="w-[48%] mb-4">
+                    <Image
+                      source={{ uri }}
+                      className="aspect-video rounded-xl object-cover"
+                    />
+                    <TouchableOpacity
+                      activeOpacity={0.7}
+                      onPress={() => removeImage(i)}
+                      className="bg-red-600 p-1 rounded-full self-start absolute -top-2 -right-2"
+                    >
+                      <XIcon color={Colors.white.default} size={16} />
+                    </TouchableOpacity>
+                  </View>
+                ))}
+              </View>
+            </View>
 
-      {/* Photos added */}
-    </Screen>
+            {/* View to put the button on the bottom */}
+            <View className="flex-1" />
+
+            {/* Button continue */}
+            <View className="bg-white px-4 border-t border-gray-100 pt-6 pb-6 -mx-4">
+              <TouchableOpacity
+                activeOpacity={0.7}
+                disabled={images.length < 3}
+              >
+                {images.length < 3 ? (
+                  <View
+                    className="bg-gray-300 h-[50] justify-center"
+                    style={{ borderRadius: 16 }}
+                  >
+                    <Text className="font-semibold text-lg text-gray-500 text-center">
+                      Continuar
+                    </Text>
+                  </View>
+                ) : (
+                  <LinearGradient
+                    colors={["#f96302", "#e55502"]}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 1 }}
+                    style={{
+                      borderRadius: 16,
+                      height: 50,
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Text className="font-semibold text-lg text-white text-center align-middle">
+                      Continuar
+                    </Text>
+                  </LinearGradient>
+                )}
+              </TouchableOpacity>
+
+              {/* Extra bottom background */}
+              <View className="bg-white absolute left-0 right-0 -mx-4 -bottom-[600] h-[600]" />
+            </View>
+          </>
+        )}
+      </Screen>
+    </>
   );
 }

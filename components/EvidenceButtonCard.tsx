@@ -1,13 +1,17 @@
 import { TouchableOpacity, View, Text } from "react-native";
-import { Card } from "./Card";
+import { Card } from "./ui/Card";
 import { Colors } from "@/constants/Colors";
-import { CameraIcon, ImageIcon } from "./Icons";
+import { CameraIcon, ImageIcon } from "./ui/Icons";
 
 const ACTIVE_OPACITY = 0.7;
 const ICON_SIZE = 27;
-export function PhotoButtonCard() {
+export function PhotoButtonCard({ pickImage }: { pickImage: () => void }) {
   return (
-    <TouchableOpacity activeOpacity={ACTIVE_OPACITY} className="flex-1">
+    <TouchableOpacity
+      activeOpacity={ACTIVE_OPACITY}
+      onPress={pickImage}
+      className="flex-1"
+    >
       <Card
         classes="border-dashed border-2"
         style={{ borderColor: Colors.primary.default }}
@@ -34,9 +38,13 @@ export function PhotoButtonCard() {
   );
 }
 
-export function GalleryButtonCard() {
+export function GalleryButtonCard({ pickImage }: { pickImage: () => void }) {
   return (
-    <TouchableOpacity activeOpacity={ACTIVE_OPACITY} className="flex-1">
+    <TouchableOpacity
+      activeOpacity={ACTIVE_OPACITY}
+      className="flex-1"
+      onPress={pickImage}
+    >
       <Card
         classes="border-dashed border-2"
         style={{ borderColor: Colors.primary.default }}

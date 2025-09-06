@@ -135,7 +135,7 @@ export default function ServiceDetail() {
         </Card>
 
         {/* Buttons section */}
-        <View className="bg-white px-4 border-t border-gray-100 py-6 -mx-4">
+        <View className="bg-white px-4 pt-6 pb-4 -mx-4 border-t border-gray-100">
           <View className="flex-row justify-between mb-1">
             <Text
               className="text-lg font-semibold"
@@ -147,6 +147,9 @@ export default function ServiceDetail() {
           </View>
           {true && <PendingSwipeButton setScrollEnabled={setScrollEnabled} />}
           {true && <CompletedSwipeButton setScrollEnabled={setScrollEnabled} />}
+
+          {/* Extra bottom background */}
+          <View className="bg-white absolute left-0 right-0 -mx-4 -bottom-[600] h-[600]" />
         </View>
       </Screen>
     </>

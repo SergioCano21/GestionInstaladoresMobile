@@ -1,13 +1,15 @@
 import { Colors } from "@/constants/Colors";
 import { SwipeButton } from "react-native-expo-swipe-button";
 import { ChevronRightIcon } from "./Icons";
-import { Alert, Dimensions } from "react-native";
+import { Alert, Dimensions, View } from "react-native";
 import { useRouter } from "expo-router";
 
 const WIDTH = Dimensions.get("window").width - 32;
-const HEIGHT = 60;
-const CIRCLE_SIZE = 60;
+const HEIGHT = 50;
+const CIRCLE_SIZE = 50;
 const BORDER_RADIUS = 16;
+const ICON_SIZE = 35;
+
 export function PendingSwipeButton({
   setScrollEnabled,
 }: {
@@ -15,7 +17,11 @@ export function PendingSwipeButton({
 }) {
   return (
     <SwipeButton
-      Icon={<ChevronRightIcon size={40} color={Colors.white.default} />}
+      Icon={
+        <View className="pl-3">
+          <ChevronRightIcon size={ICON_SIZE} color={Colors.white.default} />
+        </View>
+      }
       height={HEIGHT}
       circleSize={CIRCLE_SIZE}
       width={WIDTH}
@@ -24,21 +30,33 @@ export function PendingSwipeButton({
       onSwipeEnd={() => setScrollEnabled(true)}
       onComplete={() => Alert.alert("Completed")}
       title="Iniciar Servicio"
-      iconContainerStyle={{
-        backgroundColor: Colors.yellow.default,
-        borderRadius: BORDER_RADIUS,
+      titleStyle={{
+        fontSize: 16,
+        fontWeight: "600",
+        color: Colors.white.default,
+      }}
+      underlayTitle="En Proceso"
+      underlayTitleStyle={{
+        fontSize: 16,
+        fontWeight: "600",
+        color: Colors.white.default,
+      }}
+      iconContainerStyle={{ backgroundColor: Colors.yellow.default }}
+      containerGradientProps={{
+        colors: [Colors.yellow.start, Colors.yellow.end],
+        start: [0, 0.5],
+        end: [1, 0.5],
       }}
       underlayStyle={{
         borderBottomLeftRadius: BORDER_RADIUS,
+        borderBottomRightRadius: BORDER_RADIUS,
         borderTopLeftRadius: BORDER_RADIUS,
-        backgroundColor: Colors.yellow.default,
+        borderTopRightRadius: BORDER_RADIUS,
       }}
-      containerStyle={{ backgroundColor: Colors.yellow.background }}
-      underlayTitle="En Proceso"
-      underlayTitleStyle={{ color: Colors.white.default }}
-      underlayTitleContainerStyle={{
-        backgroundColor: Colors.yellow.default,
-        borderRadius: BORDER_RADIUS,
+      underlayContainerGradientProps={{
+        colors: [Colors.yellow.startUnderlay, Colors.yellow.endUnderlay],
+        start: [0, 0.5],
+        end: [0.8, 0.5],
       }}
     />
   );
@@ -51,7 +69,11 @@ export function CompletedSwipeButton({
   const router = useRouter();
   return (
     <SwipeButton
-      Icon={<ChevronRightIcon size={40} color={Colors.white.default} />}
+      Icon={
+        <View className="pl-3">
+          <ChevronRightIcon size={ICON_SIZE} color={Colors.white.default} />
+        </View>
+      }
       height={HEIGHT}
       width={WIDTH}
       circleSize={CIRCLE_SIZE}
@@ -61,18 +83,33 @@ export function CompletedSwipeButton({
       onSwipeEnd={() => setScrollEnabled(true)}
       onComplete={() => router.push("/evidences")}
       title="Completar Servicio"
-      iconContainerStyle={{ backgroundColor: Colors.green.default }}
-      underlayStyle={{
-        backgroundColor: Colors.green.default,
-        borderBottomLeftRadius: BORDER_RADIUS,
-        borderTopLeftRadius: BORDER_RADIUS,
+      titleStyle={{
+        fontSize: 16,
+        fontWeight: "600",
+        color: Colors.white.default,
       }}
-      containerStyle={{ backgroundColor: Colors.green.background }}
       underlayTitle="Completado"
-      underlayTitleStyle={{ color: Colors.white.default }}
-      underlayTitleContainerStyle={{
-        backgroundColor: Colors.green.default,
-        borderRadius: BORDER_RADIUS,
+      underlayTitleStyle={{
+        fontSize: 16,
+        fontWeight: "600",
+        color: Colors.white.default,
+      }}
+      iconContainerStyle={{ backgroundColor: Colors.green.default }}
+      containerGradientProps={{
+        colors: [Colors.green.start, Colors.green.end],
+        start: [0, 0.5],
+        end: [1, 0.5],
+      }}
+      underlayStyle={{
+        borderBottomLeftRadius: BORDER_RADIUS,
+        borderBottomRightRadius: BORDER_RADIUS,
+        borderTopLeftRadius: BORDER_RADIUS,
+        borderTopRightRadius: BORDER_RADIUS,
+      }}
+      underlayContainerGradientProps={{
+        colors: [Colors.green.startUnderlay, Colors.green.endUnderlay],
+        start: [0, 0.5],
+        end: [0.8, 0.5],
       }}
     />
   );
