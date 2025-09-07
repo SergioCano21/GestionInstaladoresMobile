@@ -28,7 +28,59 @@ export function PendingSwipeButton({
       borderRadius={BORDER_RADIUS}
       onSwipeStart={() => setScrollEnabled(false)}
       onSwipeEnd={() => setScrollEnabled(true)}
-      onComplete={() => Alert.alert("Completed")}
+      onComplete={() => Alert.alert("Pendiente")}
+      title="Regresar a Pendiente"
+      titleStyle={{
+        fontSize: 16,
+        fontWeight: "600",
+        color: Colors.white.default,
+      }}
+      underlayTitle="Pendiente"
+      underlayTitleStyle={{
+        fontSize: 16,
+        fontWeight: "600",
+        color: Colors.white.default,
+      }}
+      iconContainerStyle={{ backgroundColor: Colors.gray.default }}
+      containerGradientProps={{
+        colors: [Colors.gray.start, Colors.gray.end],
+        start: [0, 0.5],
+        end: [1, 0.5],
+      }}
+      underlayStyle={{
+        borderBottomLeftRadius: BORDER_RADIUS,
+        borderBottomRightRadius: BORDER_RADIUS,
+        borderTopLeftRadius: BORDER_RADIUS,
+        borderTopRightRadius: BORDER_RADIUS,
+      }}
+      underlayContainerGradientProps={{
+        colors: [Colors.gray.startUnderlay, Colors.gray.endUnderlay],
+        start: [0, 0.5],
+        end: [0.8, 0.5],
+      }}
+    />
+  );
+}
+
+export function OnProcessSwipeButton({
+  setScrollEnabled,
+}: {
+  setScrollEnabled: (enabled: boolean) => void;
+}) {
+  return (
+    <SwipeButton
+      Icon={
+        <View className="pl-3">
+          <ChevronRightIcon size={ICON_SIZE} color={Colors.white.default} />
+        </View>
+      }
+      height={HEIGHT}
+      circleSize={CIRCLE_SIZE}
+      width={WIDTH}
+      borderRadius={BORDER_RADIUS}
+      onSwipeStart={() => setScrollEnabled(false)}
+      onSwipeEnd={() => setScrollEnabled(true)}
+      onComplete={() => Alert.alert("Proceso")}
       title="Iniciar Servicio"
       titleStyle={{
         fontSize: 16,
@@ -61,6 +113,7 @@ export function PendingSwipeButton({
     />
   );
 }
+
 export function CompletedSwipeButton({
   setScrollEnabled,
 }: {
@@ -81,7 +134,7 @@ export function CompletedSwipeButton({
       goBackToStart={true}
       onSwipeStart={() => setScrollEnabled(false)}
       onSwipeEnd={() => setScrollEnabled(true)}
-      onComplete={() => router.push("/evidences")}
+      onComplete={() => router.push("/photo-evidences")}
       title="Completar Servicio"
       titleStyle={{
         fontSize: 16,

@@ -1,6 +1,9 @@
 import Screen from "@/components/Screen";
 import Badge from "@/components/ui/Badge";
-import { Card, CardTitle } from "@/components/ui/Card";
+import BottomActionBar from "@/components/ui/BottomActionBar";
+import Card from "@/components/ui/Card";
+import CardHeader from "@/components/ui/CardHeader";
+import CardTitle from "@/components/ui/CardTitle";
 import {
   ClockIcon,
   FileTextIcon,
@@ -8,8 +11,10 @@ import {
   StoreIcon,
   UserIcon,
 } from "@/components/ui/Icons";
+import OverScrollBackground from "@/components/ui/OverScrollBackground";
 import {
   CompletedSwipeButton,
+  OnProcessSwipeButton,
   PendingSwipeButton,
 } from "@/components/ui/SwipeButton";
 import { Colors } from "@/constants/Colors";
@@ -17,23 +22,22 @@ import { Stack } from "expo-router";
 import { useState } from "react";
 import { Text, View } from "react-native";
 
+const CARD_CONTENT_CLASSES = "gap-3";
+
 export default function ServiceDetail() {
   const [scrollEnabled, setScrollEnabled] = useState(true);
-  const COLOR = Colors.primary.default;
-  const SIZE = 20;
 
   return (
     <>
       <Screen scrollEnabled={scrollEnabled}>
         <Stack.Screen options={{ headerTitle: "Detalles del Servicio" }} />
         {/* Información del Servicio */}
-        <Card variant="normal">
-          <View className="gap-3">
-            <View className="flex-row gap-2 items-center">
-              <FileTextIcon color={COLOR} size={SIZE} />
-              <CardTitle>Información del Servicio</CardTitle>
-            </View>
-            <View className="flex-row items-center">
+        <Card>
+          <View className={CARD_CONTENT_CLASSES}>
+            <CardHeader Icon={FileTextIcon}>
+              Información del Servicio
+            </CardHeader>
+            <View className="flex-row items-center gap-2">
               <View className="flex-1">
                 <DetailsTitle>Folio</DetailsTitle>
                 <DetailsInfo>#1234</DetailsInfo>
@@ -62,13 +66,10 @@ export default function ServiceDetail() {
         </Card>
 
         {/* Horario */}
-        <Card variant="normal">
-          <View className="gap-3">
-            <View className="flex-row gap-2 items-center">
-              <ClockIcon color={COLOR} size={SIZE} />
-              <CardTitle>Horario</CardTitle>
-            </View>
-            <View className="flex-row items-center">
+        <Card>
+          <View className={CARD_CONTENT_CLASSES}>
+            <CardHeader Icon={ClockIcon}>Horario</CardHeader>
+            <View className="flex-row gap-2">
               <View className="flex-1">
                 <DetailsTitle>Inicio</DetailsTitle>
                 <DetailsInfo>9:00 AM</DetailsInfo>
@@ -82,14 +83,11 @@ export default function ServiceDetail() {
         </Card>
 
         {/* Información del Cliente */}
-        <Card variant="normal">
-          <View className="gap-3">
-            <View className="flex-row gap-2 items-center">
-              <UserIcon color={COLOR} size={SIZE} />
-              <CardTitle>Información del Cliente</CardTitle>
-            </View>
+        <Card>
+          <View className={CARD_CONTENT_CLASSES}>
+            <CardHeader Icon={UserIcon}>Información del Cliente</CardHeader>
             <View>
-              <DetailsTitle>Nombress</DetailsTitle>
+              <DetailsTitle>Nombres</DetailsTitle>
               <DetailsInfo>Nombre del Cliente</DetailsInfo>
             </View>
             <View>
@@ -100,12 +98,9 @@ export default function ServiceDetail() {
         </Card>
 
         {/* Ubicación */}
-        <Card variant="normal">
-          <View className="gap-3">
-            <View className="flex-row gap-2 items-center">
-              <MapPinIcon color={COLOR} size={SIZE} />
-              <CardTitle>Ubicación</CardTitle>
-            </View>
+        <Card>
+          <View className={CARD_CONTENT_CLASSES}>
+            <CardHeader Icon={MapPinIcon}>Ubicación</CardHeader>
             <View>
               <DetailsInfo>Ubicación completa del cliente</DetailsInfo>
             </View>
@@ -113,12 +108,11 @@ export default function ServiceDetail() {
         </Card>
 
         {/* Información de Tienda y Pago */}
-        <Card variant="normal">
-          <View className="gap-3">
-            <View className="flex-row gap-2 items-center">
-              <StoreIcon color={COLOR} size={SIZE} />
-              <CardTitle>Información de Tienda y Pago</CardTitle>
-            </View>
+        <Card>
+          <View className={CARD_CONTENT_CLASSES}>
+            <CardHeader Icon={StoreIcon}>
+              Información de Tienda y Pago
+            </CardHeader>
             <View>
               <DetailsTitle>Tienda</DetailsTitle>
               <DetailsInfo>Nombre de la tienda</DetailsInfo>
@@ -134,23 +128,22 @@ export default function ServiceDetail() {
           </View>
         </Card>
 
+        {/* View to put the button on the bottom */}
+        <View className="flex-1" />
+
         {/* Buttons section */}
-        <View className="bg-white px-4 pt-6 pb-4 -mx-4 border-t border-gray-100">
+        <BottomActionBar>
           <View className="flex-row justify-between mb-1">
-            <Text
-              className="text-lg font-semibold"
-              style={{ color: Colors.black.default }}
-            >
-              Estado del Servicio
-            </Text>
+            <CardTitle>Estado del Servicio</CardTitle>
             <Badge variant="pending">Pendiente</Badge>
           </View>
+          {true && <OnProcessSwipeButton setScrollEnabled={setScrollEnabled} />}
           {true && <PendingSwipeButton setScrollEnabled={setScrollEnabled} />}
           {true && <CompletedSwipeButton setScrollEnabled={setScrollEnabled} />}
 
           {/* Extra bottom background */}
-          <View className="bg-white absolute left-0 right-0 -mx-4 -bottom-[600] h-[600]" />
-        </View>
+          <OverScrollBackground />
+        </BottomActionBar>
       </Screen>
     </>
   );
@@ -158,14 +151,14 @@ export default function ServiceDetail() {
 
 function DetailsTitle({ children }: { children: React.ReactNode }) {
   return (
-    <Text className="text-sm" style={{ color: Colors.gray.dark }}>
+    <Text className="text-base" style={{ color: Colors.gray.dark }}>
       {children}
     </Text>
   );
 }
 function DetailsInfo({ children }: { children: React.ReactNode }) {
   return (
-    <Text className="text-base" style={{ color: Colors.black.default }}>
+    <Text className="text-lg" style={{ color: Colors.black.default }}>
       {children}
     </Text>
   );

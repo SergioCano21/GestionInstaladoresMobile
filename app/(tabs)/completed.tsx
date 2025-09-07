@@ -1,8 +1,8 @@
 import Screen from "@/components/Screen";
 import { CompletedService } from "@/components/ServiceCard";
-import { Card } from "@/components/ui/Card";
+import Card from "@/components/ui/Card";
 
-export default function TabTwoScreen() {
+export default function CompletedServices() {
   return (
     <Screen>
       {/* Card Completed */}

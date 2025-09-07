@@ -1,7 +1,7 @@
 import { Colors } from "@/constants/Colors";
-import { Text, View, ViewStyle } from "react-native";
+import { View, ViewStyle } from "react-native";
 
-export function Card({
+export default function Card({
   children,
   variant = "normal",
   classes = "",
@@ -29,27 +29,5 @@ export function Card({
     >
       {children}
     </View>
-  );
-}
-
-export function CardTitle({ children }: { children: React.ReactNode }) {
-  return (
-    <Text
-      className="text-lg font-semibold"
-      style={{ color: Colors.black.default }}
-    >
-      {children}
-    </Text>
-  );
-}
-
-export function CardHighlight({ children }: { children: React.ReactNode }) {
-  return (
-    <Text
-      className="text-xl font-bold"
-      style={{ color: Colors.primary.default }}
-    >
-      {children}
-    </Text>
   );
 }

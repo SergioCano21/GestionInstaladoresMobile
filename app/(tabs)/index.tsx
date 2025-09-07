@@ -1,7 +1,7 @@
 import Screen from "@/components/Screen";
 import { ActiveService } from "@/components/ServiceCard";
 import Badge from "@/components/ui/Badge";
-import { Card } from "@/components/ui/Card";
+import Card from "@/components/ui/Card";
 import { Link } from "expo-router";
 import { TouchableOpacity } from "react-native";
 

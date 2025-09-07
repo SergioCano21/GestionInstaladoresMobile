@@ -1,5 +1,5 @@
 import { TouchableOpacity, View, Text } from "react-native";
-import { Card } from "./ui/Card";
+import Card from "./ui/Card";
 import { Colors } from "@/constants/Colors";
 import { CameraIcon, ImageIcon } from "./ui/Icons";
 

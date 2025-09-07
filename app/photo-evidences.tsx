@@ -1,6 +1,6 @@
 import Screen from "@/components/Screen";
-import { Stack } from "expo-router";
-import { View, Text, Image, Alert, TouchableOpacity } from "react-native";
+import { Stack, useRouter } from "expo-router";
+import { View, Image, Alert, TouchableOpacity } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
 import {
@@ -11,10 +11,18 @@ import { InstructionsCard } from "@/components/InstructionsCard";
 import EvidencesEmptyState from "@/components/EvidencesEmptyState";
 import { ImageIcon, XIcon } from "@/components/ui/Icons";
 import { Colors } from "@/constants/Colors";
-import { LinearGradient } from "expo-linear-gradient";
+import { DisabledButton, PrimaryButton } from "@/components/ui/Buttons";
+import BottomActionBar from "@/components/ui/BottomActionBar";
+import CardHeader from "@/components/ui/CardHeader";
+import OverScrollBackground from "@/components/ui/OverScrollBackground";
 
 export default function ImagesScreen() {
+  const router = useRouter();
   const [images, setImages] = useState<string[]>([]);
+
+  const goToServiceInfo = () => {
+    router.push("/service-info");
+  };
 
   const pickImageFromCamera = async () => {
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
@@ -37,7 +45,6 @@ export default function ImagesScreen() {
         return;
       }
       setImages([...images, result.assets[0].uri]);
-      console.log(result.assets[0]);
     }
   };
 
@@ -72,6 +79,7 @@ export default function ImagesScreen() {
     <>
       <Screen>
         <Stack.Screen options={{ headerTitle: "Evidencias Fotográficas" }} />
+
         {/* Button Cards */}
         <View className="flex-row gap-4">
           <PhotoButtonCard pickImage={pickImageFromCamera} />
@@ -88,15 +96,9 @@ export default function ImagesScreen() {
         {images.length !== 0 && (
           <>
             <View className="mt-2 mb-4">
-              <View className="flex-row gap-2 items-center">
-                <ImageIcon color={Colors.primary.default} size={20} />
-                <Text
-                  className="font-semibold text-lg"
-                  style={{ color: Colors.black.default }}
-                >
-                  Fotos Seleccionadas ({images.length})
-                </Text>
-              </View>
+              <CardHeader Icon={ImageIcon}>
+                Fotos Seleccionadas ({images.length})
+              </CardHeader>
               <View className="flex-row flex-wrap justify-between mt-4">
                 {images.map((uri, i) => (
                   <View key={i} className="w-[48%] mb-4">
@@ -120,41 +122,18 @@ export default function ImagesScreen() {
             <View className="flex-1" />
 
             {/* Button continue */}
-            <View className="bg-white px-4 border-t border-gray-100 pt-6 pb-6 -mx-4">
-              <TouchableOpacity
-                activeOpacity={0.7}
-                disabled={images.length < 3}
-              >
-                {images.length < 3 ? (
-                  <View
-                    className="bg-gray-300 h-[50] justify-center"
-                    style={{ borderRadius: 16 }}
-                  >
-                    <Text className="font-semibold text-lg text-gray-500 text-center">
-                      Continuar
-                    </Text>
-                  </View>
-                ) : (
-                  <LinearGradient
-                    colors={["#f96302", "#e55502"]}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 1 }}
-                    style={{
-                      borderRadius: 16,
-                      height: 50,
-                      justifyContent: "center",
-                    }}
-                  >
-                    <Text className="font-semibold text-lg text-white text-center align-middle">
-                      Continuar
-                    </Text>
-                  </LinearGradient>
-                )}
-              </TouchableOpacity>
+            <BottomActionBar>
+              {images.length < 3 ? (
+                <DisabledButton>Continuar</DisabledButton>
+              ) : (
+                <PrimaryButton onPress={goToServiceInfo}>
+                  Continuar
+                </PrimaryButton>
+              )}
 
               {/* Extra bottom background */}
-              <View className="bg-white absolute left-0 right-0 -mx-4 -bottom-[600] h-[600]" />
-            </View>
+              <OverScrollBackground />
+            </BottomActionBar>
           </>
         )}
       </Screen>

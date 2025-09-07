@@ -1,7 +1,6 @@
 import { Colors } from "@/constants/Colors";
 import { Text, View } from "react-native";
 import Badge from "./ui/Badge";
-import { CardHighlight, CardTitle } from "./ui/Card";
 import {
   CalendarIcon,
   ChevronRightIcon,
@@ -9,6 +8,8 @@ import {
   ClockIcon,
   MapPinIcon,
 } from "./ui/Icons";
+import CardTitle from "./ui/CardTitle";
+import CardHighlight from "./ui/CardTitleHighlight";
 
 export function ActiveService() {
   return (

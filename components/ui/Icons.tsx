@@ -12,6 +12,8 @@ import {
   Image,
   Info,
   X,
+  Package,
+  Wrench,
 } from "lucide-react-native";
 
 interface Props {
@@ -57,4 +59,10 @@ export const InfoIcon = ({ color, size }: Props) => {
 };
 export const XIcon = ({ color, size }: Props) => {
   return <X color={color} size={size} />;
+};
+export const PackageIcon = ({ color, size }: Props) => {
+  return <Package color={color} size={size} />;
+};
+export const WrenchIcon = ({ color, size }: Props) => {
+  return <Wrench color={color} size={size} />;
 };

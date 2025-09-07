@@ -8,10 +8,14 @@ export const Colors = {
     background: "#000000a3",
   },
   gray: {
-    default: "#8e9398",
+    default: "#374151",
     light: "#f4f4f4",
     medium: "#ddd",
     dark: "#4a5568",
+    startUnderlay: "#6b7280",
+    endUnderlay: "#374151",
+    start: "#d1d5db",
+    end: "#6b7280",
   },
   white: {
     default: "#fff",
