@@ -5,19 +5,33 @@ import Card from "@/components/ui/Card";
 import CardHeader from "@/components/ui/CardHeader";
 import {
   CalendarIcon,
+  FileTextIcon,
   PackageIcon,
   UserIcon,
   WrenchIcon,
 } from "@/components/ui/Icons";
 import OverScrollBackground from "@/components/ui/OverScrollBackground";
-import { Colors } from "@/constants/Colors";
-import { Stack } from "expo-router";
-import { View, Text, TextInput } from "react-native";
+import { Stack, useRouter } from "expo-router";
+import { View } from "react-native";
+import {
+  InputNumber,
+  InputText,
+  Label,
+  InputTime,
+  InputTextArea,
+} from "@/components/ui/Inputs";
+import NoticeCard from "@/components/NoticeCard";
 
 const CARD_CONTENT_CLASSES = "gap-3";
 const INPUT_CONTENT_CLASSES = "gap-1";
 
 export default function ServiceInfo() {
+  const router = useRouter();
+
+  const goToClientInfo = () => {
+    router.push("/client-info");
+  };
+
   return (
     <Screen>
       <Stack.Screen options={{ headerTitle: "Información del Servicio" }} />
@@ -26,12 +40,14 @@ export default function ServiceInfo() {
       <Card>
         <View className={CARD_CONTENT_CLASSES}>
           <CardHeader Icon={CalendarIcon}>Fecha del Servicio</CardHeader>
-          <View className="flex-row gap-2">
-            <View className="flex-1 gap-1">
+          <View className="flex-row gap-4">
+            <View className={`flex-1 ${INPUT_CONTENT_CLASSES}`}>
               <Label>Fecha de Inicio *</Label>
+              <InputTime />
             </View>
-            <View className="flex-1">
+            <View className={`flex-1 ${INPUT_CONTENT_CLASSES}`}>
               <Label>Fecha Final *</Label>
+              <InputTime />
             </View>
           </View>
         </View>
@@ -43,7 +59,7 @@ export default function ServiceInfo() {
           <CardHeader Icon={UserIcon}>Información del Instalador</CardHeader>
           <View className={INPUT_CONTENT_CLASSES}>
             <Label>Nombre del Instalador *</Label>
-            <Input placeholder="Nombre de quien realizó la instalación" />
+            <InputText placeholder="Nombre de quien realizó la instalación" />
           </View>
         </View>
       </Card>
@@ -52,24 +68,25 @@ export default function ServiceInfo() {
       <Card>
         <View className={CARD_CONTENT_CLASSES}>
           <CardHeader Icon={PackageIcon}>Información del Producto</CardHeader>
-          <View>
+          <View className={INPUT_CONTENT_CLASSES}>
             <Label>Producto Instalado *</Label>
-            <Input placeholder="Ej. Aire acondicionado, ventilador de techo, etc." />
+            <InputText placeholder="Ej. Aire acondicionado, ventilador de techo, etc." />
           </View>
-          <View>
+          <View className={INPUT_CONTENT_CLASSES}>
             <Label>Donde se Instaló *</Label>
-            <Input placeholder="Ej. Sala principal, comedor, etc." />
+            <InputText placeholder="Ej. Sala principal, comedor, etc." />
           </View>
-          <View>
+          <View className={INPUT_CONTENT_CLASSES}>
             <Label>Cantidad *</Label>
+            <InputNumber placeholder="Cantidad de unidades instaladas" />
           </View>
-          <View>
+          <View className={INPUT_CONTENT_CLASSES}>
             <Label>Especificación del Producto *</Label>
-            <Input placeholder="Ej. Modelo o Marca" />
+            <InputText placeholder="Ej. Modelo o Marca" />
           </View>
-          <View>
+          <View className={INPUT_CONTENT_CLASSES}>
             <Label>Número de Serie (si aplica)</Label>
-            <Input placeholder="Número de serie del producto" />
+            <InputText placeholder="Número de serie del producto" />
           </View>
         </View>
       </Card>
@@ -78,49 +95,33 @@ export default function ServiceInfo() {
       <Card>
         <View className={CARD_CONTENT_CLASSES}>
           <CardHeader Icon={WrenchIcon}>Recomendaciones</CardHeader>
-          <View>
+          <View className={INPUT_CONTENT_CLASSES}>
             <Label>Recomendaciones de Uso</Label>
+            <InputTextArea placeholder="Recomendaciones para el uso y mantenimiento del producto instalado..." />
           </View>
         </View>
       </Card>
+
+      <NoticeCard
+        Icon={FileTextIcon}
+        title="Campos Requeridos"
+        content="Los campos marcados con (*) son obligatorios para completar el registro del servicio."
+      />
 
       {/* View to put the button on the bottom */}
       <View className="flex-1" />
 
       {/* Button continue */}
       <BottomActionBar>
-        {true ? (
+        {false ? (
           <DisabledButton>Continuar</DisabledButton>
         ) : (
-          <PrimaryButton onPress={() => null}>Continuar</PrimaryButton>
+          <PrimaryButton onPress={goToClientInfo}>Continuar</PrimaryButton>
         )}
 
         {/* Extra bottom background */}
         <OverScrollBackground />
       </BottomActionBar>
     </Screen>
-  );
-}
-
-function Label({ children }: { children: React.ReactNode }) {
-  return (
-    <Text
-      className="font-medium text-base"
-      style={{ color: Colors.black.default }}
-    >
-      {children}
-    </Text>
-  );
-}
-function Input({ placeholder }: { placeholder: string }) {
-  return (
-    <TextInput
-      className="h-12 px-3 text-lg bg-gray-100 rounded-md text-gray-900 border-2 border-gray-100 focus:border-gray-500"
-      style={{
-        lineHeight: 20,
-      }}
-      placeholder={placeholder}
-      placeholderTextColor={"#6b7280"}
-    />
   );
 }

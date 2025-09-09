@@ -14,6 +14,11 @@ import {
   X,
   Package,
   Wrench,
+  MessageSquare,
+  UserCheck,
+  FileSignature,
+  RotateCcw,
+  Mail,
 } from "lucide-react-native";
 
 interface Props {
@@ -65,4 +70,19 @@ export const PackageIcon = ({ color, size }: Props) => {
 };
 export const WrenchIcon = ({ color, size }: Props) => {
   return <Wrench color={color} size={size} />;
+};
+export const MessageSquareIcon = ({ color, size }: Props) => {
+  return <MessageSquare color={color} size={size} />;
+};
+export const UserCheckIcon = ({ color, size }: Props) => {
+  return <UserCheck color={color} size={size} />;
+};
+export const FileSignatureIcon = ({ color, size }: Props) => {
+  return <FileSignature color={color} size={size} />;
+};
+export const RotateCcwIcon = ({ color, size }: Props) => {
+  return <RotateCcw color={color} size={size} />;
+};
+export const MailIcon = ({ color, size }: Props) => {
+  return <Mail color={color} size={size} />;
 };

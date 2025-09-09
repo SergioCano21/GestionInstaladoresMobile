@@ -1,33 +1,30 @@
-import { Colors } from "@/constants/Colors";
-import { View, ViewStyle } from "react-native";
+import { View } from "react-native";
 
 export default function Card({
   children,
   variant = "normal",
-  classes = "",
-  style = {},
 }: {
   children: React.ReactNode;
-  variant?: "active" | "completed" | "normal";
-  classes?: string;
-  style?: ViewStyle;
+  variant?:
+    | "active"
+    | "completed"
+    | "normal"
+    | "blue"
+    | "yellow"
+    | "dashed-orange"
+    | "dashed-gray"
+    | "green";
 }) {
-  const borderClass = variant !== "normal" ? "border-l-4" : "";
-  return (
-    <View
-      className={`p-5 rounded-xl mb-4 ${borderClass} ${classes}`}
-      style={{
-        backgroundColor: Colors.white.default,
-        borderLeftColor:
-          variant === "active"
-            ? Colors.primary.default
-            : variant === "completed"
-              ? Colors.green.medium
-              : undefined,
-        ...style,
-      }}
-    >
-      {children}
-    </View>
-  );
+  const config = {
+    active: "bg-white border-l-4 border-l-[#f96302]", //Primary color
+    completed: "bg-white border-l-4 border-l-green-500",
+    normal: "bg-white",
+    blue: "bg-blue-50 border border-blue-200",
+    yellow: "bg-yellow-50 border border-yellow-200",
+    "dashed-orange": "bg-white border-2 border-dashed border-[#f96302]", //Primary color
+    "dashed-gray": "bg-white border-2 border-dashed border-gray-300",
+    green: "bg-green-50 border border-green-200",
+  }[variant];
+
+  return <View className={`p-5 mb-4 rounded-xl ${config}`}>{children}</View>;
 }

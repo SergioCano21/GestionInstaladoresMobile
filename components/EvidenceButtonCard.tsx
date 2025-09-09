@@ -12,10 +12,7 @@ export function PhotoButtonCard({ pickImage }: { pickImage: () => void }) {
       onPress={pickImage}
       className="flex-1"
     >
-      <Card
-        classes="border-dashed border-2"
-        style={{ borderColor: Colors.primary.default }}
-      >
+      <Card variant="dashed-orange">
         <View className="items-center">
           <View
             className="rounded-full p-4 mb-2"
@@ -45,10 +42,7 @@ export function GalleryButtonCard({ pickImage }: { pickImage: () => void }) {
       className="flex-1"
       onPress={pickImage}
     >
-      <Card
-        classes="border-dashed border-2"
-        style={{ borderColor: Colors.primary.default }}
-      >
+      <Card variant="dashed-orange">
         <View className="items-center">
           <View
             className="rounded-full p-4 mb-2"

@@ -7,9 +7,9 @@ import {
   GalleryButtonCard,
   PhotoButtonCard,
 } from "@/components/EvidenceButtonCard";
-import { InstructionsCard } from "@/components/InstructionsCard";
+import NoticeCard from "@/components/NoticeCard";
 import EvidencesEmptyState from "@/components/EvidencesEmptyState";
-import { ImageIcon, XIcon } from "@/components/ui/Icons";
+import { ImageIcon, InfoIcon, XIcon } from "@/components/ui/Icons";
 import { Colors } from "@/constants/Colors";
 import { DisabledButton, PrimaryButton } from "@/components/ui/Buttons";
 import BottomActionBar from "@/components/ui/BottomActionBar";
@@ -81,13 +81,22 @@ export default function ImagesScreen() {
         <Stack.Screen options={{ headerTitle: "Evidencias Fotográficas" }} />
 
         {/* Button Cards */}
-        <View className="flex-row gap-4">
+        <View className="flex-row gap-4 mb-4">
           <PhotoButtonCard pickImage={pickImageFromCamera} />
           <GalleryButtonCard pickImage={pickImageFromGallery} />
         </View>
 
         {/* Instruction Card */}
-        <InstructionsCard />
+        <NoticeCard
+          Icon={InfoIcon}
+          title={"Instrucciones"}
+          content={
+            "\u2022 Toma fotos del trabajo completado\n" +
+            "\u2022 Incluye detalles de la instalación\n" +
+            "\u2022 Mínimo 3 fotos, máximo 6 fotos\n" +
+            "\u2022 Asegúrate que las fotos sean claras"
+          }
+        />
 
         {/* Empty state */}
         {images.length === 0 && <EvidencesEmptyState />}
