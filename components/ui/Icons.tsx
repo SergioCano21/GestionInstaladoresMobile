@@ -19,6 +19,10 @@ import {
   FileSignature,
   RotateCcw,
   Mail,
+  Hash,
+  Phone,
+  Building,
+  LogOut,
 } from "lucide-react-native";
 
 interface Props {
@@ -85,4 +89,16 @@ export const RotateCcwIcon = ({ color, size }: Props) => {
 };
 export const MailIcon = ({ color, size }: Props) => {
   return <Mail color={color} size={size} />;
+};
+export const HashIcon = ({ color, size }: Props) => {
+  return <Hash color={color} size={size} />;
+};
+export const PhoneIcon = ({ color, size }: Props) => {
+  return <Phone color={color} size={size} />;
+};
+export const BuildingIcon = ({ color, size }: Props) => {
+  return <Building color={color} size={size} />;
+};
+export const LogoutIcon = ({ color, size }: Props) => {
+  return <LogOut color={color} size={size} />;
 };

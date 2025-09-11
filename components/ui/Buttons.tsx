@@ -57,3 +57,20 @@ export function SmallButton({
     </TouchableOpacity>
   );
 }
+export function RedButton({
+  children,
+  onPress,
+}: {
+  children: React.ReactNode;
+  onPress: () => void;
+}) {
+  return (
+    <TouchableOpacity
+      activeOpacity={0.7}
+      className={`bg-red-600 justify-center mb-4`}
+      style={{ borderRadius: BORDER_RADIUS, height: HEIGHT }}
+    >
+      {children}
+    </TouchableOpacity>
+  );
+}
