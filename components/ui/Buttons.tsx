@@ -69,6 +69,7 @@ export function RedButton({
       activeOpacity={0.7}
       className={`bg-red-600 justify-center mb-4`}
       style={{ borderRadius: BORDER_RADIUS, height: HEIGHT }}
+      onPress={onPress}
     >
       {children}
     </TouchableOpacity>

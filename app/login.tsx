@@ -2,9 +2,11 @@ import Logo from "@/assets/images/logo.svg";
 import { PrimaryButton } from "@/components/ui/Buttons";
 import { InputText, Label } from "@/components/ui/Inputs";
 import { Colors } from "@/constants/Colors";
+import { useAuth } from "@/provider/AuthProvider";
 import { Text, View } from "react-native";
 
 export default function Login() {
+  const { logIn } = useAuth();
   return (
     <View className="bg-white justify-center flex-1 p-4">
       <View className=" p-5 mb-4 rounded-xl border border-gray-300">
@@ -29,7 +31,7 @@ export default function Login() {
             <Label>Contraseña</Label>
             <InputText placeholder="" />
           </View>
-          <PrimaryButton onPress={() => null}>Iniciar Sesión</PrimaryButton>
+          <PrimaryButton onPress={logIn}>Iniciar Sesión</PrimaryButton>
         </View>
       </View>
     </View>

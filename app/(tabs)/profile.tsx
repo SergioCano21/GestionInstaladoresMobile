@@ -13,9 +13,11 @@ import {
   UserIcon,
 } from "@/components/ui/Icons";
 import { Colors } from "@/constants/Colors";
-import { View, Text } from "react-native";
+import { useAuth } from "@/provider/AuthProvider";
+import { Text, View } from "react-native";
 
 export default function Profile() {
+  const { logOut } = useAuth();
   return (
     <Screen>
       {/* Personal Information */}
@@ -122,7 +124,7 @@ export default function Profile() {
       </Card>
 
       {/* Close session button */}
-      <RedButton onPress={() => null}>
+      <RedButton onPress={logOut}>
         <View className="flex-row items-center justify-center gap-3">
           <LogoutIcon size={16} color={Colors.white.default} />
           <Text className="font-semibold text-lg text-white text-center">

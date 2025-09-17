@@ -1,13 +1,15 @@
+import { Colors } from "@/constants/Colors";
+import { AuthProvider, useAuth } from "@/provider/AuthProvider";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-reanimated";
 import "../global.css";
-import { Colors } from "@/constants/Colors";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 
 function InitialLayout() {
+  const { isAuthenticated } = useAuth();
   return (
     <Stack
       screenOptions={{
@@ -17,10 +19,14 @@ function InitialLayout() {
         headerShadowVisible: true,
       }}
     >
-      <Stack.Protected guard={false}>
+      <Stack.Protected guard={isAuthenticated}>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       </Stack.Protected>
-      <Stack.Screen name="login" options={{ headerShown: false }} />
+
+      <Stack.Protected guard={!isAuthenticated}>
+        <Stack.Screen name="login" options={{ headerShown: false }} />
+      </Stack.Protected>
+
       <Stack.Screen name="+not-found" />
     </Stack>
   );
@@ -39,8 +45,10 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView>
       <BottomSheetModalProvider>
-        <InitialLayout />
-        <StatusBar style="dark" />
+        <AuthProvider>
+          <InitialLayout />
+          <StatusBar style="dark" />
+        </AuthProvider>
       </BottomSheetModalProvider>
     </GestureHandlerRootView>
   );
