@@ -17,7 +17,7 @@ import {
   InputNumber,
   InputText,
   Label,
-  InputTime,
+  InputDate,
   InputTextArea,
 } from "@/components/ui/Inputs";
 import NoticeCard from "@/components/NoticeCard";
@@ -43,11 +43,11 @@ export default function ServiceInfo() {
           <View className="flex-row gap-4">
             <View className={`flex-1 ${INPUT_CONTENT_CLASSES}`}>
               <Label>Fecha de Inicio *</Label>
-              <InputTime />
+              <InputDate />
             </View>
             <View className={`flex-1 ${INPUT_CONTENT_CLASSES}`}>
               <Label>Fecha Final *</Label>
-              <InputTime />
+              <InputDate />
             </View>
           </View>
         </View>

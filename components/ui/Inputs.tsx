@@ -22,7 +22,7 @@ export function InputText({ placeholder }: { placeholder: string }) {
     />
   );
 }
-export function InputTime() {
+export function InputDate() {
   const [date, setDate] = useState<Date | null>(null);
   const [showDate, setShowDate] = useState(false);
   return (
@@ -81,5 +81,45 @@ export function InputTextArea({ placeholder }: { placeholder: string }) {
       numberOfLines={4}
       textAlignVertical="top"
     />
+  );
+}
+
+export function InputTimeAndDate() {
+  const [date, setDate] = useState<Date | null>(null);
+  const [showDate, setShowDate] = useState(false);
+  return (
+    <>
+      <TextInput
+        className="h-12 px-3 leading-5 text-lg bg-gray-100 rounded-md text-gray-900 border-2 border-gray-100"
+        placeholder={"--/--/----  -  --:-- ----"}
+        placeholderTextColor={"#111827"}
+        editable={false}
+        onPress={() => setShowDate(true)}
+        value={
+          date
+            ? `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} - ${date.getHours()}:${date.getMinutes()} ${date.getHours() >= 12 ? "p.m." : "a.m."}`
+            : ""
+        }
+      />
+      {showDate && (
+        <DateTimePickerModal
+          mode="datetime"
+          display="inline"
+          isVisible={showDate}
+          onConfirm={(date) => {
+            setDate(date);
+            setShowDate(false);
+          }}
+          onCancel={() => setShowDate(false)}
+          cancelTextIOS="Cerrar"
+          confirmTextIOS="Confirmar"
+          accentColor={Colors.primary.default}
+          locale="es_mx"
+          buttonTextColorIOS={Colors.primary.default}
+          isDarkModeEnabled={false}
+          themeVariant="light"
+        />
+      )}
+    </>
   );
 }

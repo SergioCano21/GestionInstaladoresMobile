@@ -23,6 +23,8 @@ import {
   Phone,
   Building,
   LogOut,
+  Plus,
+  CalendarX,
 } from "lucide-react-native";
 
 interface Props {
@@ -101,4 +103,10 @@ export const BuildingIcon = ({ color, size }: Props) => {
 };
 export const LogoutIcon = ({ color, size }: Props) => {
   return <LogOut color={color} size={size} />;
+};
+export const PlusIcon = ({ color, size }: Props) => {
+  return <Plus color={color} size={size} />;
+};
+export const CalendarXIcon = ({ color, size }: Props) => {
+  return <CalendarX color={color} size={size} />;
 };
