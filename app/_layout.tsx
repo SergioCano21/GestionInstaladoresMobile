@@ -17,7 +17,10 @@ function InitialLayout() {
         headerShadowVisible: true,
       }}
     >
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Protected guard={false}>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      </Stack.Protected>
+      <Stack.Screen name="login" options={{ headerShown: false }} />
       <Stack.Screen name="+not-found" />
     </Stack>
   );

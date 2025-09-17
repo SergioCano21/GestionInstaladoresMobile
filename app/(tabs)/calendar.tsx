@@ -12,6 +12,7 @@ import CalendarItem, { EmptyCalendarItem } from "@/components/ui/CalendarItem";
 import { useFocusEffect, useNavigation } from "expo-router";
 import { PlusIcon } from "@/components/ui/Icons";
 import BlockerModal from "@/components/BlockerModal";
+import { cssInterop } from "nativewind";
 
 const EVENTS = [
   {
@@ -77,6 +78,8 @@ const EVENTS = [
   },
 ];
 
+cssInterop(CalendarProvider, { className: "style" });
+
 export default function Calendar() {
   // Header configuration
   const navigation = useNavigation();
@@ -114,7 +117,7 @@ export default function Calendar() {
       <CalendarProvider
         date={selectedDate}
         onDateChanged={(date) => setSelectedDate(date)}
-        style={{ backgroundColor: Colors.gray.light }}
+        className="bg-gray-100"
       >
         <View className="bg-white">
           <WeekCalendar
