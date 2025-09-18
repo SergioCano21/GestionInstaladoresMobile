@@ -1,18 +1,25 @@
 import { LinearGradient } from "expo-linear-gradient";
-import { Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
 
 const BORDER_RADIUS = 16;
 const HEIGHT = 50;
 
 export function PrimaryButton({
   children,
+  loading = false,
   onPress,
 }: {
   children: React.ReactNode;
+  loading?: boolean;
   onPress: () => void;
 }) {
   return (
-    <TouchableOpacity activeOpacity={0.7} onPress={onPress}>
+    <TouchableOpacity
+      activeOpacity={0.7}
+      onPress={onPress}
+      disabled={loading}
+      className={loading ? "opacity-70" : ""}
+    >
       <LinearGradient
         colors={["#f96302", "#e55502"]}
         start={{ x: 0, y: 0 }}
@@ -23,9 +30,13 @@ export function PrimaryButton({
           justifyContent: "center",
         }}
       >
-        <Text className="font-semibold text-lg text-white text-center align-middle">
-          {children}
-        </Text>
+        {loading ? (
+          <ActivityIndicator size="small" color="#ffffff" />
+        ) : (
+          <Text className="font-semibold text-lg text-white text-center">
+            {children}
+          </Text>
+        )}
       </LinearGradient>
     </TouchableOpacity>
   );
@@ -60,18 +71,21 @@ export function SmallButton({
 export function RedButton({
   children,
   onPress,
+  loading = false,
 }: {
   children: React.ReactNode;
   onPress: () => void;
+  loading?: boolean;
 }) {
   return (
     <TouchableOpacity
       activeOpacity={0.7}
-      className={`bg-red-600 justify-center mb-4`}
+      className={`bg-red-600 justify-center mb-4 ${loading ? "opacity-70" : ""}`}
       style={{ borderRadius: BORDER_RADIUS, height: HEIGHT }}
       onPress={onPress}
+      disabled={loading}
     >
-      {children}
+      {loading ? <ActivityIndicator size="small" color="#ffffff" /> : children}
     </TouchableOpacity>
   );
 }

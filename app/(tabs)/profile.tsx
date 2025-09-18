@@ -13,11 +13,30 @@ import {
   UserIcon,
 } from "@/components/ui/Icons";
 import { Colors } from "@/constants/Colors";
-import { useAuth } from "@/provider/AuthProvider";
-import { Text, View } from "react-native";
+import { handleLogout } from "@/services/auth";
+import { useState } from "react";
+import { Alert, Text, View } from "react-native";
 
 export default function Profile() {
-  const { logOut } = useAuth();
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const onLogout = async () => {
+    setLoading(true);
+
+    try {
+      await handleLogout();
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      Alert.alert(
+        "Error",
+        "Ocurrió un error al intentar cerrar sesión. Intente de nuevo."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <Screen>
       {/* Personal Information */}
@@ -124,7 +143,7 @@ export default function Profile() {
       </Card>
 
       {/* Close session button */}
-      <RedButton onPress={logOut}>
+      <RedButton onPress={onLogout} loading={loading}>
         <View className="flex-row items-center justify-center gap-3">
           <LogoutIcon size={16} color={Colors.white.default} />
           <Text className="font-semibold text-lg text-white text-center">

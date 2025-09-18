@@ -1,6 +1,6 @@
 import { Colors } from "@/constants/Colors";
-import { TextInput, Text } from "react-native";
 import { useState } from "react";
+import { KeyboardTypeOptions, Text, TextInput } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 export function Label({ children }: { children: React.ReactNode }) {
@@ -13,12 +13,43 @@ export function Label({ children }: { children: React.ReactNode }) {
     </Text>
   );
 }
-export function InputText({ placeholder }: { placeholder: string }) {
+export function InputText<T>({
+  placeholder,
+  type = "text",
+  name,
+  loading = false,
+  setValue,
+}: {
+  placeholder: string;
+  type?: "text" | "password" | "email" | "number";
+  name: keyof T;
+  loading?: boolean;
+  setValue: React.Dispatch<React.SetStateAction<T>>;
+}) {
+  const keyboardType = {
+    text: "default",
+    password: "default",
+    email: "email-address",
+    number: "number-pad",
+  }[type];
+
   return (
     <TextInput
       className="h-12 px-3 leading-5 text-lg bg-gray-100 rounded-md text-gray-900 border-2 border-gray-100 focus:border-gray-500"
       placeholder={placeholder}
       placeholderTextColor={"#6b7280"}
+      secureTextEntry={type === "password"}
+      autoCapitalize={
+        type === "password" || type === "email" ? "none" : "sentences"
+      }
+      keyboardType={keyboardType as KeyboardTypeOptions}
+      onChangeText={(text) =>
+        setValue((prev) => ({
+          ...prev,
+          [name]: type === "number" ? Number(text) : text,
+        }))
+      }
+      editable={!loading}
     />
   );
 }
@@ -66,8 +97,8 @@ export function InputNumber({ placeholder }: { placeholder: string }) {
     <TextInput
       className="h-12 px-3 leading-5 text-lg bg-gray-100 rounded-md text-gray-900 border-2 border-gray-100 focus:border-gray-500"
       placeholder={placeholder}
-      keyboardType="numeric"
       placeholderTextColor={"#6b7280"}
+      keyboardType="numeric"
     />
   );
 }
