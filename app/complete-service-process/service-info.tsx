@@ -1,3 +1,4 @@
+import NoticeCard from "@/components/NoticeCard";
 import Screen from "@/components/Screen";
 import BottomActionBar from "@/components/ui/BottomActionBar";
 import { DisabledButton, PrimaryButton } from "@/components/ui/Buttons";
@@ -10,17 +11,16 @@ import {
   UserIcon,
   WrenchIcon,
 } from "@/components/ui/Icons";
+import {
+  InputDate,
+  InputNumber,
+  InputText,
+  InputTextArea,
+  Label,
+} from "@/components/ui/Inputs";
 import OverScrollBackground from "@/components/ui/OverScrollBackground";
 import { Stack, useRouter } from "expo-router";
 import { View } from "react-native";
-import {
-  InputNumber,
-  InputText,
-  Label,
-  InputDate,
-  InputTextArea,
-} from "@/components/ui/Inputs";
-import NoticeCard from "@/components/NoticeCard";
 
 const CARD_CONTENT_CLASSES = "gap-3";
 const INPUT_CONTENT_CLASSES = "gap-1";
@@ -29,7 +29,7 @@ export default function ServiceInfo() {
   const router = useRouter();
 
   const goToClientInfo = () => {
-    router.push("/client-info");
+    router.push("./client-info");
   };
 
   return (

@@ -1,5 +1,6 @@
 import { LinearGradient } from "expo-linear-gradient";
-import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
+import LoadingSpinner from "./LoadingSpinner";
 
 const BORDER_RADIUS = 16;
 const HEIGHT = 50;
@@ -31,7 +32,7 @@ export function PrimaryButton({
         }}
       >
         {loading ? (
-          <ActivityIndicator size="small" color="#ffffff" />
+          <LoadingSpinner color="#ffffff" />
         ) : (
           <Text className="font-semibold text-lg text-white text-center">
             {children}
@@ -85,7 +86,7 @@ export function RedButton({
       onPress={onPress}
       disabled={loading}
     >
-      {loading ? <ActivityIndicator size="small" color="#ffffff" /> : children}
+      {loading ? <LoadingSpinner color="#ffffff" /> : children}
     </TouchableOpacity>
   );
 }

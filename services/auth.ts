@@ -1,4 +1,4 @@
-import { api_login } from "@/api/auth";
+import { apiLogin } from "@/api/auth";
 import { TOKEN_NAME } from "@/constants/Constants";
 import { Login } from "@/types/types";
 import * as SecureStore from "expo-secure-store";
@@ -16,7 +16,7 @@ export const setLogoutHandler = (handler: () => void) => {
 
 export const handleLogin = async (credentials: Login) => {
   try {
-    const { token } = await api_login(credentials);
+    const { token } = await apiLogin(credentials);
     await SecureStore.setItemAsync(TOKEN_NAME, token);
     loginHandler?.();
   } catch (error: any) {

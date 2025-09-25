@@ -1,8 +1,8 @@
 import { Colors } from "@/constants/Colors";
+import { Dimensions, View } from "react-native";
 import { SwipeButton } from "react-native-expo-swipe-button";
 import { ChevronRightIcon } from "./Icons";
-import { Alert, Dimensions, View } from "react-native";
-import { useRouter } from "expo-router";
+import LoadingSpinner from "./LoadingSpinner";
 
 const WIDTH = Dimensions.get("window").width - 32;
 const HEIGHT = 50;
@@ -10,10 +10,14 @@ const CIRCLE_SIZE = 50;
 const BORDER_RADIUS = 16;
 const ICON_SIZE = 35;
 
-export function PendingSwipeButton({
+export function SwipeToTodoButton({
   setScrollEnabled,
+  onComplete,
+  loading,
 }: {
   setScrollEnabled: (enabled: boolean) => void;
+  onComplete: () => void;
+  loading: boolean;
 }) {
   return (
     <SwipeButton
@@ -22,20 +26,23 @@ export function PendingSwipeButton({
           <ChevronRightIcon size={ICON_SIZE} color={Colors.white.default} />
         </View>
       }
+      goBackToStart={false}
       height={HEIGHT}
       circleSize={CIRCLE_SIZE}
       width={WIDTH}
       borderRadius={BORDER_RADIUS}
       onSwipeStart={() => setScrollEnabled(false)}
       onSwipeEnd={() => setScrollEnabled(true)}
-      onComplete={() => Alert.alert("Pendiente")}
+      onComplete={onComplete}
+      containerStyle={{ opacity: 1 }}
       title="Regresar a Pendiente"
       titleStyle={{
         fontSize: 16,
         fontWeight: "600",
         color: Colors.white.default,
       }}
-      underlayTitle="Pendiente"
+      underlayTitleElement={loading ? <LoadingSpinner color="#fff" /> : null}
+      underlayTitle={"Pendiente"}
       underlayTitleStyle={{
         fontSize: 16,
         fontWeight: "600",
@@ -62,10 +69,14 @@ export function PendingSwipeButton({
   );
 }
 
-export function OnProcessSwipeButton({
+export function SwipeToDoingButton({
   setScrollEnabled,
+  onComplete,
+  loading,
 }: {
   setScrollEnabled: (enabled: boolean) => void;
+  onComplete: () => void;
+  loading: boolean;
 }) {
   return (
     <SwipeButton
@@ -74,13 +85,14 @@ export function OnProcessSwipeButton({
           <ChevronRightIcon size={ICON_SIZE} color={Colors.white.default} />
         </View>
       }
+      goBackToStart={false}
       height={HEIGHT}
       circleSize={CIRCLE_SIZE}
       width={WIDTH}
       borderRadius={BORDER_RADIUS}
       onSwipeStart={() => setScrollEnabled(false)}
       onSwipeEnd={() => setScrollEnabled(true)}
-      onComplete={() => Alert.alert("Proceso")}
+      onComplete={onComplete}
       title="Iniciar Servicio"
       titleStyle={{
         fontSize: 16,
@@ -88,6 +100,7 @@ export function OnProcessSwipeButton({
         color: Colors.white.default,
       }}
       underlayTitle="En Proceso"
+      underlayTitleElement={loading ? <LoadingSpinner color="#fff" /> : null}
       underlayTitleStyle={{
         fontSize: 16,
         fontWeight: "600",
@@ -114,12 +127,15 @@ export function OnProcessSwipeButton({
   );
 }
 
-export function CompletedSwipeButton({
+export function SwipeToCompleteButton({
   setScrollEnabled,
+  onComplete,
+  loading,
 }: {
   setScrollEnabled: (enabled: boolean) => void;
+  onComplete: () => void;
+  loading: boolean;
 }) {
-  const router = useRouter();
   return (
     <SwipeButton
       Icon={
@@ -127,14 +143,14 @@ export function CompletedSwipeButton({
           <ChevronRightIcon size={ICON_SIZE} color={Colors.white.default} />
         </View>
       }
+      goBackToStart={true}
       height={HEIGHT}
       width={WIDTH}
       circleSize={CIRCLE_SIZE}
       borderRadius={BORDER_RADIUS}
-      goBackToStart={true}
       onSwipeStart={() => setScrollEnabled(false)}
       onSwipeEnd={() => setScrollEnabled(true)}
-      onComplete={() => router.push("/photo-evidences")}
+      onComplete={onComplete}
       title="Completar Servicio"
       titleStyle={{
         fontSize: 16,

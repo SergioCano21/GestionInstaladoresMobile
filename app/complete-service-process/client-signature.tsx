@@ -1,24 +1,30 @@
 import Screen from "@/components/Screen";
 import BottomActionBar from "@/components/ui/BottomActionBar";
 import {
-  SmallButton,
   DisabledButton,
   PrimaryButton,
+  SmallButton,
 } from "@/components/ui/Buttons";
 import Card from "@/components/ui/Card";
 import CardHeader from "@/components/ui/CardHeader";
 import CardTitle from "@/components/ui/CardTitle";
 import { FileSignatureIcon, RotateCcwIcon } from "@/components/ui/Icons";
 import OverScrollBackground from "@/components/ui/OverScrollBackground";
-import { Stack } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import { useRef, useState } from "react";
-import { View, Text } from "react-native";
+import { Text, View } from "react-native";
 import SignatureCanvas from "react-native-signature-canvas";
 
 export default function ClientSignature() {
   const [scrollEnabled, setScrollEnabled] = useState(true);
   const [canContinue, setCanContinue] = useState(false);
   const signatureRef = useRef<any>(null);
+
+  const router = useRouter();
+
+  const goToActiveServices = () => {
+    router.dismissAll();
+  };
 
   const getCurrentDate = () => {
     const now = new Date();
@@ -110,7 +116,12 @@ export default function ClientSignature() {
       {/* Button continue */}
       <BottomActionBar>
         {canContinue ? (
-          <PrimaryButton onPress={() => signatureRef.current?.readSignature()}>
+          <PrimaryButton
+            onPress={() => {
+              signatureRef.current?.readSignature();
+              goToActiveServices();
+            }}
+          >
             Finalizar Servicio
           </PrimaryButton>
         ) : (

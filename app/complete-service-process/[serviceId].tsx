@@ -1,3 +1,4 @@
+import { apiUpdateService } from "@/api/services";
 import Screen from "@/components/Screen";
 import Badge from "@/components/ui/Badge";
 import BottomActionBar from "@/components/ui/BottomActionBar";
@@ -13,19 +14,52 @@ import {
 } from "@/components/ui/Icons";
 import OverScrollBackground from "@/components/ui/OverScrollBackground";
 import {
-  CompletedSwipeButton,
-  OnProcessSwipeButton,
-  PendingSwipeButton,
+  SwipeToCompleteButton,
+  SwipeToDoingButton,
+  SwipeToTodoButton,
 } from "@/components/ui/SwipeButton";
 import { Colors } from "@/constants/Colors";
-import { Stack } from "expo-router";
+import { QUERY_KEYS, STATUS } from "@/constants/Constants";
+import { Service, Status } from "@/types/types";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
-import { Text, View } from "react-native";
+import { Alert, Text, View } from "react-native";
 
 const CARD_CONTENT_CLASSES = "gap-3";
 
 export default function ServiceDetail() {
   const [scrollEnabled, setScrollEnabled] = useState(true);
+  const { serviceId } = useLocalSearchParams();
+  const queryClient = useQueryClient();
+  const router = useRouter();
+  const [resetKey, setResetKey] = useState<number>(0);
+
+  const service = queryClient
+    .getQueryData<Service[]>([QUERY_KEYS.SERVICES, QUERY_KEYS.ACTIVE])
+    ?.find((s) => s._id === serviceId);
+
+  const mutation = useMutation({ mutationFn: apiUpdateService });
+
+  const handleUpdate = async (status: Status) => {
+    try {
+      if (mutation.isPending) return;
+
+      await mutation.mutateAsync({ id: serviceId as string, status });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.SERVICES, QUERY_KEYS.ACTIVE],
+      });
+      router.dismiss();
+    } catch (error: any) {
+      Alert.alert("Ocurrió un error", error.message);
+    } finally {
+      setResetKey((prev) => prev + 1);
+    }
+  };
+
+  const handleComplete = () => {
+    router.push("./photo-evidences");
+  };
 
   return (
     <>
@@ -40,27 +74,28 @@ export default function ServiceDetail() {
             <View className="flex-row items-center gap-2">
               <View className="flex-1">
                 <DetailsTitle>Folio</DetailsTitle>
-                <DetailsInfo>#1234</DetailsInfo>
+                <DetailsInfo>#{service?.folio}</DetailsInfo>
               </View>
               <View className="flex-1">
-                <Badge variant="pending">Pendiente</Badge>
+                {service?.status === STATUS.TODO && (
+                  <Badge variant="todo">Pendiente</Badge>
+                )}
+                {service?.status === STATUS.DOING && (
+                  <Badge variant="doing">En Proceso</Badge>
+                )}
               </View>
             </View>
             <View>
               <DetailsTitle>Descripción</DetailsTitle>
-              <DetailsInfo>
-                Descripción detallada de lo que se tiene que hacer en el
-                servicio. Incluye especificaciones técnicas de lo que se va a
-                hacer y lo que se le vendió al cliente.
-              </DetailsInfo>
+              <DetailsInfo>{service?.jobDetails[0].description}</DetailsInfo>
             </View>
             <View>
               <DetailsTitle>Cantidad</DetailsTitle>
-              <DetailsInfo>2</DetailsInfo>
+              <DetailsInfo>{service?.jobDetails[0].quantity}</DetailsInfo>
             </View>
             <View>
               <DetailsTitle>Comentarios Adicionales</DetailsTitle>
-              <DetailsInfo>Sin comentarios</DetailsInfo>
+              <DetailsInfo>{service?.additionalComments}</DetailsInfo>
             </View>
           </View>
         </Card>
@@ -72,11 +107,15 @@ export default function ServiceDetail() {
             <View className="flex-row gap-2">
               <View className="flex-1">
                 <DetailsTitle>Inicio</DetailsTitle>
-                <DetailsInfo>9:00 AM</DetailsInfo>
+                <DetailsInfo>
+                  {service?.schedule.startTime ?? "Sin Asignar"}
+                </DetailsInfo>
               </View>
               <View className="flex-1">
                 <DetailsTitle>Fin</DetailsTitle>
-                <DetailsInfo>12:00 PM</DetailsInfo>
+                <DetailsInfo>
+                  {service?.schedule.endTime ?? "Sin Asignar"}
+                </DetailsInfo>
               </View>
             </View>
           </View>
@@ -88,11 +127,11 @@ export default function ServiceDetail() {
             <CardHeader Icon={UserIcon}>Información del Cliente</CardHeader>
             <View>
               <DetailsTitle>Nombres</DetailsTitle>
-              <DetailsInfo>Nombre del Cliente</DetailsInfo>
+              <DetailsInfo>{service?.client}</DetailsInfo>
             </View>
             <View>
               <DetailsTitle>Teléfono</DetailsTitle>
-              <DetailsInfo>9991988767</DetailsInfo>
+              <DetailsInfo>{service?.clientPhone}</DetailsInfo>
             </View>
           </View>
         </Card>
@@ -102,7 +141,7 @@ export default function ServiceDetail() {
           <View className={CARD_CONTENT_CLASSES}>
             <CardHeader Icon={MapPinIcon}>Ubicación</CardHeader>
             <View>
-              <DetailsInfo>Ubicación completa del cliente</DetailsInfo>
+              <DetailsInfo>{service?.address}</DetailsInfo>
             </View>
           </View>
         </Card>
@@ -115,15 +154,17 @@ export default function ServiceDetail() {
             </CardHeader>
             <View>
               <DetailsTitle>Tienda</DetailsTitle>
-              <DetailsInfo>Nombre de la tienda</DetailsInfo>
+              <DetailsInfo>
+                #{service?.store.numStore} {service?.store.name}
+              </DetailsInfo>
             </View>
             <View>
               <DetailsTitle>Teléfono</DetailsTitle>
-              <DetailsInfo>9991988767</DetailsInfo>
+              <DetailsInfo>{service?.store.phone}</DetailsInfo>
             </View>
             <View>
               <DetailsTitle>Ganancia del Servicio</DetailsTitle>
-              <DetailsInfo>$850</DetailsInfo>
+              <DetailsInfo>${service?.totals.installerPayment}</DetailsInfo>
             </View>
           </View>
         </Card>
@@ -132,14 +173,43 @@ export default function ServiceDetail() {
         <View className="flex-1" />
 
         {/* Buttons section */}
+
         <BottomActionBar>
           <View className="flex-row justify-between mb-1">
             <CardTitle>Estado del Servicio</CardTitle>
-            <Badge variant="pending">Pendiente</Badge>
+            {service?.status === STATUS.TODO && (
+              <Badge variant="todo">Pendiente</Badge>
+            )}
+            {service?.status === STATUS.DOING && (
+              <Badge variant="doing">En Proceso</Badge>
+            )}
           </View>
-          {true && <OnProcessSwipeButton setScrollEnabled={setScrollEnabled} />}
-          {true && <PendingSwipeButton setScrollEnabled={setScrollEnabled} />}
-          {true && <CompletedSwipeButton setScrollEnabled={setScrollEnabled} />}
+          <View
+            pointerEvents={mutation.isPending ? "none" : "auto"}
+            key={resetKey}
+          >
+            {service?.status === STATUS.TODO && (
+              <SwipeToDoingButton
+                loading={mutation.isPending}
+                onComplete={() => handleUpdate("Doing")}
+                setScrollEnabled={setScrollEnabled}
+              />
+            )}
+            {service?.status === STATUS.DOING && (
+              <SwipeToTodoButton
+                loading={mutation.isPending}
+                onComplete={() => handleUpdate("To Do")}
+                setScrollEnabled={setScrollEnabled}
+              />
+            )}
+            {service?.status === STATUS.DOING && (
+              <SwipeToCompleteButton
+                loading={mutation.isPending}
+                onComplete={handleComplete}
+                setScrollEnabled={setScrollEnabled}
+              />
+            )}
+          </View>
 
           {/* Extra bottom background */}
           <OverScrollBackground />

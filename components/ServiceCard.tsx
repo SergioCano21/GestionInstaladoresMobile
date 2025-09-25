@@ -1,6 +1,10 @@
 import { Colors } from "@/constants/Colors";
+import { Service } from "@/types/types";
 import { Text, View } from "react-native";
 import Badge from "./ui/Badge";
+import Card from "./ui/Card";
+import CardTitle from "./ui/CardTitle";
+import CardHighlight from "./ui/CardTitleHighlight";
 import {
   CalendarIcon,
   ChevronRightIcon,
@@ -8,42 +12,71 @@ import {
   ClockIcon,
   MapPinIcon,
 } from "./ui/Icons";
-import CardTitle from "./ui/CardTitle";
-import CardHighlight from "./ui/CardTitleHighlight";
 
-export function ActiveService() {
+export function ServiceCard({
+  service,
+  type,
+}: {
+  service: Service;
+  type: "active" | "completed";
+}) {
+  return (
+    <Card variant={type}>
+      {type === "active" ? (
+        <ActiveService service={service} />
+      ) : (
+        <CompletedService service={service} />
+      )}
+    </Card>
+  );
+}
+
+function ActiveService({ service }: { service: Service }) {
   return (
     <>
       <View className="flex-row items-center justify-between mb-3">
         <View className="flex-row items-center gap-3">
-          <Badge variant="pending">Pendiente</Badge>
-          <CardHighlight>#1234</CardHighlight>
+          {service.status === "To Do" ? (
+            <Badge variant="todo">Pendiente</Badge>
+          ) : (
+            <Badge variant="doing">En Proceso</Badge>
+          )}
+          <CardHighlight>#{service.folio}</CardHighlight>
         </View>
         <ChevronRightIcon color={Colors.gray.default} size={22} />
       </View>
-      <CardTitle>Nombre Cliente</CardTitle>
+      <CardTitle>{service.client}</CardTitle>
       <View className="mt-1">
-        <InfoRow icon="clock">9:00AM - 12:00PM</InfoRow>
-        <InfoRow icon="map-pin">Dirección Completa del Cliente 3300</InfoRow>
+        <InfoRow icon="clock">
+          {service.schedule.startTime && service.schedule.endTime
+            ? `${service.schedule.startTime} - ${service.schedule.endTime}`
+            : `Sin Asignar`}
+        </InfoRow>
+        <InfoRow icon="map-pin">{service.address}</InfoRow>
       </View>
     </>
   );
 }
 
-export function CompletedService() {
+function CompletedService({ service }: { service: Service }) {
   return (
     <>
       <View className="flex-row items-center justify-between mb-3">
         <View className="flex-row items-center gap-3">
           <CircleCheckIcon color={Colors.green.medium} size={20} />
-          <CardHighlight>#1234</CardHighlight>
-          <Badge variant="completed">Completado</Badge>
+          <CardHighlight>#{service.folio}</CardHighlight>
+          <Badge variant="done">Completado</Badge>
         </View>
       </View>
-      <CardTitle>Nombre Cliente</CardTitle>
+      <CardTitle>{service.client}</CardTitle>
       <View className="mt-1">
-        <InfoRow icon="calendar">15 Enero 2025</InfoRow>
-        <InfoRow icon="map-pin">Dirección Completa del Cliente 3300</InfoRow>
+        <InfoRow icon="calendar">
+          {" "}
+          {service.schedule.startTime && service.schedule.endTime
+            ? `${service.schedule.startTime} - ${service.schedule.endTime}`
+            : `Sin Asignar`}
+        </InfoRow>
+        <InfoRow icon="map-pin">{service.address}</InfoRow>
         <View className="flex-row items-center justify-between mt-1">
           <Text className="text-base" style={{ color: Colors.gray.dark }}>
             Ganancia:
@@ -52,7 +85,7 @@ export function CompletedService() {
             className="text-xl font-bold"
             style={{ color: Colors.green.medium }}
           >
-            $650
+            ${service.totals.installerPayment}
           </Text>
         </View>
       </View>

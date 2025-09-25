@@ -6,16 +6,25 @@ const badgeConfig = {
     backgroundColor: Colors.primary.background,
     color: Colors.primary.default,
     class: "mb-4",
+    text: "",
   },
-  pending: {
+  todo: {
     backgroundColor: Colors.gray.light,
     color: Colors.gray.dark,
     class: "font-semibold",
+    text: "Pendiente",
   },
-  completed: {
+  doing: {
+    backgroundColor: Colors.yellow.background,
+    color: Colors.yellow.default,
+    class: "font-semibold",
+    text: "En Proceso",
+  },
+  done: {
     backgroundColor: Colors.green.background,
     color: Colors.green.default,
     class: "font-semibold",
+    text: "Completado",
   },
 };
 
@@ -23,8 +32,8 @@ export default function Badge({
   variant,
   children,
 }: {
-  variant: "active" | "pending" | "completed";
-  children: React.ReactNode;
+  variant: "active" | "todo" | "doing" | "done";
+  children?: React.ReactNode;
 }) {
   const config = badgeConfig[variant];
   return (

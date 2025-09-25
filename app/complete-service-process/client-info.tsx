@@ -25,7 +25,7 @@ export default function ClientInfo() {
   const [isClient, setIsClient] = useState(true);
 
   const goToClientSignature = () => {
-    router.push("/client-signature");
+    router.push("./client-signature");
   };
 
   return (

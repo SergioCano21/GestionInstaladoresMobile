@@ -1,82 +1,25 @@
-import { TouchableOpacity, View } from "react-native";
+import { apiGetSchedules } from "@/api/schedule";
+import BlockerModal from "@/components/BlockerModal";
+import Screen from "@/components/Screen";
+import CalendarItem from "@/components/ui/CalendarItem";
+import { EmptyCalendar } from "@/components/ui/EmptyState";
+import { PlusIcon } from "@/components/ui/Icons";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import "@/constants/calendarLocale";
+import { Colors } from "@/constants/Colors";
+import { QUERY_KEYS } from "@/constants/Constants";
+import { Section } from "@/types/types";
+import { useQuery } from "@tanstack/react-query";
+import { format } from "date-fns";
+import { useFocusEffect, useNavigation } from "expo-router";
+import { cssInterop } from "nativewind";
+import { useCallback, useLayoutEffect, useMemo, useState } from "react";
+import { TouchableOpacity, View } from "react-native";
 import {
   AgendaList,
   CalendarProvider,
   WeekCalendar,
 } from "react-native-calendars";
-import { Colors } from "@/constants/Colors";
-import { useCallback, useLayoutEffect, useMemo, useState } from "react";
-import { format } from "date-fns";
-import CalendarItem, { EmptyCalendarItem } from "@/components/ui/CalendarItem";
-import { useFocusEffect, useNavigation } from "expo-router";
-import { PlusIcon } from "@/components/ui/Icons";
-import BlockerModal from "@/components/BlockerModal";
-import { cssInterop } from "nativewind";
-
-const EVENTS = [
-  {
-    title: "2025-09-15",
-    data: [
-      {
-        type: "Blocker",
-        service: {
-          folio: "$service.folio",
-          status: "$service.status",
-          address: "$service.address",
-        },
-        startTime: "10:00",
-        endTime: "12:00",
-        description: "Reunion del equipo",
-      },
-      {
-        type: "Service",
-        service: {
-          folio: "$service.folio",
-          status: "$service.status",
-          address: "$service.address",
-        },
-        startTime: "10:00",
-        endTime: "12:00",
-      },
-    ],
-  },
-  {
-    title: "2025-09-14",
-    data: [
-      {
-        type: "Blocker",
-        service: {
-          folio: "$service.folio",
-          status: "$service.status",
-          address: "$service.address",
-        },
-        startTime: "10:00",
-        endTime: "12:00",
-      },
-      {
-        type: "Service",
-        service: {
-          folio: "$service.folio",
-          status: "$service.status",
-          address: "$service.address",
-        },
-        startTime: "10:00",
-        endTime: "12:00",
-      },
-      {
-        type: "Service",
-        service: {
-          folio: "$service.folio",
-          status: "$service.status",
-          address: "$service.address",
-        },
-        startTime: "10:00",
-        endTime: "12:00",
-      },
-    ],
-  },
-];
 
 cssInterop(CalendarProvider, { className: "style" });
 
@@ -97,14 +40,19 @@ export default function Calendar() {
     });
   }, [navigation]);
 
+  const { data: sections, isLoading } = useQuery<Section[]>({
+    queryKey: [QUERY_KEYS.SCHEDULE],
+    queryFn: apiGetSchedules,
+  });
+
   const today = useMemo(() => getToday(), []);
   const [selectedDate, setSelectedDate] = useState<string>(today);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
 
   // Display only the services of the selected date
-  const filteredSections = useMemo(() => {
-    return EVENTS.filter((section) => section.title === selectedDate);
-  }, [selectedDate]);
+  const filteredSchedules = useMemo(() => {
+    return sections?.filter((section) => section.title === selectedDate) ?? [];
+  }, [selectedDate, sections]);
 
   useFocusEffect(
     useCallback(() => {
@@ -112,6 +60,12 @@ export default function Calendar() {
     }, [today])
   );
 
+  if (isLoading)
+    return (
+      <Screen>
+        <LoadingSpinner />
+      </Screen>
+    );
   return (
     <>
       <CalendarProvider
@@ -138,18 +92,22 @@ export default function Calendar() {
             }}
           />
         </View>
-
         <AgendaList
           stickyHeaderHiddenOnScroll={false}
           sections={
-            filteredSections.length > 0
-              ? filteredSections
+            filteredSchedules.length > 0
+              ? filteredSchedules
               : [{ title: selectedDate, data: [{}] }]
           }
-          renderItem={({ item }) => {
-            if (!item || Object.keys(item).length === 0)
-              return <EmptyCalendarItem />;
-            return <CalendarItem data={item} />;
+          renderItem={({ item }) =>
+            Object.keys(item).length === 0 ? (
+              <EmptyCalendar />
+            ) : (
+              <CalendarItem data={item} />
+            )
+          }
+          onLayout={(event) => {
+            console.log(event.nativeEvent.layout.height);
           }}
         />
       </CalendarProvider>

@@ -1,27 +1,27 @@
-import Screen from "@/components/Screen";
-import { Stack, useRouter } from "expo-router";
-import { View, Image, Alert, TouchableOpacity } from "react-native";
-import * as ImagePicker from "expo-image-picker";
-import { useState } from "react";
 import {
   GalleryButtonCard,
   PhotoButtonCard,
 } from "@/components/EvidenceButtonCard";
-import NoticeCard from "@/components/NoticeCard";
 import EvidencesEmptyState from "@/components/EvidencesEmptyState";
-import { ImageIcon, InfoIcon, XIcon } from "@/components/ui/Icons";
-import { Colors } from "@/constants/Colors";
-import { DisabledButton, PrimaryButton } from "@/components/ui/Buttons";
+import NoticeCard from "@/components/NoticeCard";
+import Screen from "@/components/Screen";
 import BottomActionBar from "@/components/ui/BottomActionBar";
+import { DisabledButton, PrimaryButton } from "@/components/ui/Buttons";
 import CardHeader from "@/components/ui/CardHeader";
+import { ImageIcon, InfoIcon, XIcon } from "@/components/ui/Icons";
 import OverScrollBackground from "@/components/ui/OverScrollBackground";
+import { Colors } from "@/constants/Colors";
+import * as ImagePicker from "expo-image-picker";
+import { Stack, useRouter } from "expo-router";
+import { useState } from "react";
+import { Alert, Image, TouchableOpacity, View } from "react-native";
 
 export default function ImagesScreen() {
   const router = useRouter();
   const [images, setImages] = useState<string[]>([]);
 
   const goToServiceInfo = () => {
-    router.push("/service-info");
+    router.push("./service-info");
   };
 
   const pickImageFromCamera = async () => {

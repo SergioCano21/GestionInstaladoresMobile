@@ -1,30 +1,32 @@
 import {
+  Building,
   Calendar,
+  CalendarX,
+  Camera,
   ChevronRight,
   CircleCheckBig,
+  ClipboardClock,
   ClipboardList,
+  ClipboardX,
   Clock,
-  MapPin,
-  User,
+  FileSignature,
   FileText,
-  Store,
-  Camera,
+  Hash,
   Image,
   Info,
-  X,
-  Package,
-  Wrench,
-  MessageSquare,
-  UserCheck,
-  FileSignature,
-  RotateCcw,
-  Mail,
-  Hash,
-  Phone,
-  Building,
   LogOut,
+  Mail,
+  MapPin,
+  MessageSquare,
+  Package,
+  Phone,
   Plus,
-  CalendarX,
+  RotateCcw,
+  Store,
+  User,
+  UserCheck,
+  Wrench,
+  X,
 } from "lucide-react-native";
 
 interface Props {
@@ -109,4 +111,10 @@ export const PlusIcon = ({ color, size }: Props) => {
 };
 export const CalendarXIcon = ({ color, size }: Props) => {
   return <CalendarX color={color} size={size} />;
+};
+export const ClipboardClockIcon = ({ color, size }: Props) => {
+  return <ClipboardClock color={color} size={size} />;
+};
+export const ClipboardXIcon = ({ color, size }: Props) => {
+  return <ClipboardX color={color} size={size} />;
 };
