@@ -82,9 +82,18 @@ export interface Schedule {
   type: "Service" | "Block";
   address: string;
   description?: string;
+  status: Status;
+  serviceId: string;
 }
 
 export interface Section {
   title: string;
   data: Schedule[];
+}
+
+export interface AddBlockerForm {
+  startTime: string;
+  endTime: string;
+  type: "Block";
+  description?: string;
 }

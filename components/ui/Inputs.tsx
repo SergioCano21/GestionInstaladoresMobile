@@ -13,6 +13,7 @@ export function Label({ children }: { children: React.ReactNode }) {
     </Text>
   );
 }
+
 export function InputText<T>({
   placeholder,
   type = "text",
@@ -53,6 +54,7 @@ export function InputText<T>({
     />
   );
 }
+
 export function InputDate() {
   const [date, setDate] = useState<Date | null>(null);
   const [showDate, setShowDate] = useState(false);
@@ -92,6 +94,7 @@ export function InputDate() {
     </>
   );
 }
+
 export function InputNumber({ placeholder }: { placeholder: string }) {
   return (
     <TextInput
@@ -102,7 +105,18 @@ export function InputNumber({ placeholder }: { placeholder: string }) {
     />
   );
 }
-export function InputTextArea({ placeholder }: { placeholder: string }) {
+
+export function InputTextArea<T>({
+  placeholder,
+  name,
+  loading = false,
+  setValue,
+}: {
+  placeholder: string;
+  name: keyof T;
+  loading?: boolean;
+  setValue: React.Dispatch<React.SetStateAction<T>>;
+}) {
   return (
     <TextInput
       className="px-3 py-3 leading-5 text-lg bg-gray-100 rounded-md text-gray-900 border-2 border-gray-100 focus:border-gray-500"
@@ -111,11 +125,26 @@ export function InputTextArea({ placeholder }: { placeholder: string }) {
       multiline={true}
       numberOfLines={4}
       textAlignVertical="top"
+      onChangeText={(text) =>
+        setValue((prev) => ({
+          ...prev,
+          [name]: text,
+        }))
+      }
+      editable={!loading}
     />
   );
 }
 
-export function InputTimeAndDate() {
+export function InputTimeAndDate<T>({
+  name,
+  loading = false,
+  setValue,
+}: {
+  name: keyof T;
+  loading?: boolean;
+  setValue: React.Dispatch<React.SetStateAction<T>>;
+}) {
   const [date, setDate] = useState<Date | null>(null);
   const [showDate, setShowDate] = useState(false);
   return (
@@ -125,7 +154,7 @@ export function InputTimeAndDate() {
         placeholder={"--/--/----  -  --:-- ----"}
         placeholderTextColor={"#111827"}
         editable={false}
-        onPress={() => setShowDate(true)}
+        onPress={!loading ? () => setShowDate(true) : undefined}
         value={
           date
             ? `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} - ${date.getHours()}:${date.getMinutes()} ${date.getHours() >= 12 ? "p.m." : "a.m."}`
@@ -140,6 +169,10 @@ export function InputTimeAndDate() {
           onConfirm={(date) => {
             setDate(date);
             setShowDate(false);
+            setValue((prev) => ({
+              ...prev,
+              [name]: date,
+            }));
           }}
           onCancel={() => setShowDate(false)}
           cancelTextIOS="Cerrar"

@@ -3,6 +3,7 @@ import {
   Calendar,
   CalendarX,
   Camera,
+  Check,
   ChevronRight,
   CircleCheckBig,
   ClipboardClock,
@@ -117,4 +118,7 @@ export const ClipboardClockIcon = ({ color, size }: Props) => {
 };
 export const ClipboardXIcon = ({ color, size }: Props) => {
   return <ClipboardX color={color} size={size} />;
+};
+export const CheckIcon = ({ color, size }: Props) => {
+  return <Check color={color} size={size} />;
 };

@@ -106,9 +106,6 @@ export default function Calendar() {
               <CalendarItem data={item} />
             )
           }
-          onLayout={(event) => {
-            console.log(event.nativeEvent.layout.height);
-          }}
         />
       </CalendarProvider>
 
