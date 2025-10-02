@@ -76,14 +76,15 @@ export interface Store {
 export interface Schedule {
   _id: string;
   folio?: number;
-  date: string;
+  startDate: string;
+  endDate: string;
   startTime: string;
   endTime: string;
   type: "Service" | "Block";
-  address: string;
+  address?: string;
   description?: string;
-  status: Status;
-  serviceId: string;
+  status?: Status;
+  serviceId?: string;
 }
 
 export interface Section {
@@ -91,9 +92,9 @@ export interface Section {
   data: Schedule[];
 }
 
-export interface AddBlockerForm {
-  startTime: string;
-  endTime: string;
+export interface BlockerForm {
+  startTime: Date | null;
+  endTime: Date | null;
   type: "Block";
   description?: string;
 }

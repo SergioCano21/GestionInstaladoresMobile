@@ -1,10 +1,5 @@
+import dayjs from "@/services/dayjsConfig";
 import { Schedule, Service } from "@/types/types";
-import dayjs from "dayjs";
-import timezone from "dayjs/plugin/timezone";
-import utc from "dayjs/plugin/utc";
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
 
 export const transformServices = ({
   services,
@@ -20,11 +15,8 @@ export const transformServices = ({
     return {
       ...service,
       schedule: {
-        startTime: dayjs
-          .utc(service.schedule.startTime)
-          .tz(userTZ)
-          .format("HH:mm"),
-        endTime: dayjs.utc(service.schedule.endTime).tz(userTZ).format("HH:mm"),
+        startTime: dayjs(service.schedule.startTime).tz(userTZ).format("HH:mm"),
+        endTime: dayjs(service.schedule.endTime).tz(userTZ).format("HH:mm"),
       },
     };
   });
@@ -42,7 +34,8 @@ export const transformSchedule = ({
 
     return {
       ...schedule,
-      date: dayjs.utc(schedule.startTime).tz(userTZ).format("YYYY-MM-DD"),
+      startDate: dayjs.utc(schedule.startTime).tz(userTZ).format("YYYY-MM-DD"),
+      endDate: dayjs.utc(schedule.endTime).tz(userTZ).format("YYYY-MM-DD"),
       startTime: dayjs.utc(schedule.startTime).tz(userTZ).format("HH:mm"),
       endTime: dayjs.utc(schedule.endTime).tz(userTZ).format("HH:mm"),
     };

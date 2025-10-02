@@ -1,6 +1,6 @@
 import { Colors } from "@/constants/Colors";
-import { useState } from "react";
-import { KeyboardTypeOptions, Text, TextInput } from "react-native";
+import { useEffect, useState } from "react";
+import { KeyboardTypeOptions, Pressable, Text, TextInput } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 export function Label({ children }: { children: React.ReactNode }) {
@@ -111,11 +111,13 @@ export function InputTextArea<T>({
   name,
   loading = false,
   setValue,
+  value,
 }: {
   placeholder: string;
   name: keyof T;
   loading?: boolean;
   setValue: React.Dispatch<React.SetStateAction<T>>;
+  value: string;
 }) {
   return (
     <TextInput
@@ -132,6 +134,7 @@ export function InputTextArea<T>({
         }))
       }
       editable={!loading}
+      value={value}
     />
   );
 }
@@ -140,27 +143,35 @@ export function InputTimeAndDate<T>({
   name,
   loading = false,
   setValue,
+  value,
 }: {
   name: keyof T;
   loading?: boolean;
   setValue: React.Dispatch<React.SetStateAction<T>>;
+  value: Date | null;
 }) {
   const [date, setDate] = useState<Date | null>(null);
   const [showDate, setShowDate] = useState(false);
+
+  useEffect(() => {
+    setDate(value);
+  }, [value]);
+
   return (
     <>
-      <TextInput
-        className="h-12 px-3 leading-5 text-lg bg-gray-100 rounded-md text-gray-900 border-2 border-gray-100"
-        placeholder={"--/--/----  -  --:-- ----"}
-        placeholderTextColor={"#111827"}
-        editable={false}
-        onPress={!loading ? () => setShowDate(true) : undefined}
-        value={
-          date
-            ? `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} - ${date.getHours()}:${date.getMinutes()} ${date.getHours() >= 12 ? "p.m." : "a.m."}`
-            : ""
-        }
-      />
+      <Pressable onPress={!loading ? () => setShowDate(true) : undefined}>
+        <TextInput
+          className="h-12 px-3 leading-5 text-lg bg-gray-100 rounded-md text-gray-900 border-2 border-gray-100"
+          placeholder={"--/--/----  -  --:-- ----"}
+          placeholderTextColor={"#111827"}
+          editable={false}
+          value={
+            date
+              ? `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} - ${date.getHours()}:${date.getMinutes()} ${date.getHours() >= 12 ? "p.m." : "a.m."}`
+              : ""
+          }
+        />
+      </Pressable>
       {showDate && (
         <DateTimePickerModal
           mode="datetime"

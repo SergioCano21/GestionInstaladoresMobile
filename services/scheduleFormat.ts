@@ -7,8 +7,8 @@ export const scheduleToSection = ({
 }): Section[] => {
   const grouped: Record<string, Schedule[]> = schedules.reduce(
     (accumulator, current) => {
-      accumulator[current.date] = accumulator[current.date] || [];
-      accumulator[current.date].push(current);
+      accumulator[current.startDate] = accumulator[current.startDate] || [];
+      accumulator[current.startDate].push(current);
       return accumulator;
     },
     {} as Record<string, Schedule[]>

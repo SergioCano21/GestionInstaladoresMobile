@@ -7,9 +7,16 @@ import { CheckIcon, ClockIcon, MapPinIcon } from "./Icons";
 const SIZE = 16;
 const COLOR = Colors.gray.dark;
 
-export default function CalendarItem({ data }: { data: Schedule }) {
+export default function CalendarItem({
+  data,
+  onEdit,
+}: {
+  data: Schedule;
+  onEdit: (blocker: Schedule) => void;
+}) {
   if (data.type === "Service") return <ItemData data={data} />;
-  if (data.type === "Block") return <ItemDataBlocker data={data} />;
+  if (data.type === "Block")
+    return <ItemDataBlocker data={data} onEdit={onEdit} />;
   return null;
 }
 
@@ -48,9 +55,19 @@ function ItemData({ data }: { data: Schedule }) {
   );
 }
 
-function ItemDataBlocker({ data }: { data: Schedule }) {
+function ItemDataBlocker({
+  data,
+  onEdit,
+}: {
+  data: Schedule;
+  onEdit: (blocker: Schedule) => void;
+}) {
   return (
-    <View className="flex-1 p-4 bg-gray-100 border-t border-gray-200">
+    <TouchableOpacity
+      onPress={() => onEdit(data)}
+      activeOpacity={0.7}
+      className="flex-1 p-4 bg-gray-100 border-t border-gray-200"
+    >
       <Text className="font-medium text-lg">Horario Bloqueado</Text>
       <View className="flex-row items-center gap-2">
         <ClockIcon color={COLOR} size={SIZE} />
@@ -63,6 +80,6 @@ function ItemDataBlocker({ data }: { data: Schedule }) {
           {data.description}
         </Text>
       )}
-    </View>
+    </TouchableOpacity>
   );
 }

@@ -86,7 +86,13 @@ export function RedButton({
       onPress={onPress}
       disabled={loading}
     >
-      {loading ? <LoadingSpinner color="#ffffff" /> : children}
+      {loading ? (
+        <LoadingSpinner color="#ffffff" />
+      ) : (
+        <Text className="font-semibold text-lg text-white text-center">
+          {children}
+        </Text>
+      )}
     </TouchableOpacity>
   );
 }

@@ -8,9 +8,9 @@ import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import "@/constants/calendarLocale";
 import { Colors } from "@/constants/Colors";
 import { QUERY_KEYS } from "@/constants/Constants";
-import { Section } from "@/types/types";
+import dayjs from "@/services/dayjsConfig";
+import { Schedule, Section } from "@/types/types";
 import { useQuery } from "@tanstack/react-query";
-import { format } from "date-fns";
 import { useFocusEffect, useNavigation } from "expo-router";
 import { cssInterop } from "nativewind";
 import { useCallback, useLayoutEffect, useMemo, useState } from "react";
@@ -32,7 +32,8 @@ export default function Calendar() {
         <TouchableOpacity
           className="mr-4"
           activeOpacity={0.7}
-          onPress={() => setModalVisible(true)}
+          onPress={handleAddBlocker}
+          hitSlop={{ left: 40, top: 20, bottom: 20, right: 20 }}
         >
           <PlusIcon color={Colors.primary.default} size={24} />
         </TouchableOpacity>
@@ -48,11 +49,22 @@ export default function Calendar() {
   const today = useMemo(() => getToday(), []);
   const [selectedDate, setSelectedDate] = useState<string>(today);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [selectedBlocker, setSelectedBlocker] = useState<Schedule | null>(null);
 
   // Display only the services of the selected date
   const filteredSchedules = useMemo(() => {
     return sections?.filter((section) => section.title === selectedDate) ?? [];
   }, [selectedDate, sections]);
+
+  const handleEditBlocker = (blocker: Schedule) => {
+    setSelectedBlocker(blocker);
+    setModalVisible(true);
+  };
+
+  const handleAddBlocker = () => {
+    setSelectedBlocker(null);
+    setModalVisible(true);
+  };
 
   useFocusEffect(
     useCallback(() => {
@@ -60,12 +72,14 @@ export default function Calendar() {
     }, [today])
   );
 
+  console.log(selectedDate);
   if (isLoading)
     return (
       <Screen>
         <LoadingSpinner />
       </Screen>
     );
+  console.log(selectedDate);
   return (
     <>
       <CalendarProvider
@@ -103,18 +117,22 @@ export default function Calendar() {
             Object.keys(item).length === 0 ? (
               <EmptyCalendar />
             ) : (
-              <CalendarItem data={item} />
+              <CalendarItem data={item} onEdit={handleEditBlocker} />
             )
           }
         />
       </CalendarProvider>
 
       {/* Modal */}
-      <BlockerModal isVisible={modalVisible} showModal={setModalVisible} />
+      <BlockerModal
+        data={selectedBlocker}
+        isVisible={modalVisible}
+        showModal={setModalVisible}
+      />
     </>
   );
 
   function getToday(): string {
-    return format(new Date(), "yyyy-MM-dd");
+    return dayjs().format("YYYY-MM-DD");
   }
 }
