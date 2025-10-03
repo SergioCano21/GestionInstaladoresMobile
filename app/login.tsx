@@ -16,8 +16,8 @@ import {
 } from "react-native";
 
 const initialState: Login = {
-  installerId: 0,
-  password: "",
+  installerId: undefined,
+  password: undefined,
 };
 
 export default function LoginPage() {
@@ -67,6 +67,7 @@ export default function LoginPage() {
                   type="number"
                   name="installerId"
                   setValue={setForm}
+                  value={form.installerId}
                   placeholder=""
                   loading={loading}
                 />
@@ -77,6 +78,7 @@ export default function LoginPage() {
                   type="password"
                   name="password"
                   setValue={setForm}
+                  value={form.password}
                   placeholder=""
                   loading={loading}
                 />

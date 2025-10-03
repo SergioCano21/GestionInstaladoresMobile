@@ -1,5 +1,5 @@
 import { Colors } from "@/constants/Colors";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { KeyboardTypeOptions, Pressable, Text, TextInput } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
@@ -20,12 +20,14 @@ export function InputText<T>({
   name,
   loading = false,
   setValue,
+  value,
 }: {
   placeholder: string;
   type?: "text" | "password" | "email" | "number";
   name: keyof T;
   loading?: boolean;
   setValue: React.Dispatch<React.SetStateAction<T>>;
+  value: string | number | undefined;
 }) {
   const keyboardType = {
     text: "default",
@@ -50,36 +52,93 @@ export function InputText<T>({
           [name]: type === "number" ? Number(text) : text,
         }))
       }
+      value={value?.toString() ?? ""}
       editable={!loading}
     />
   );
 }
 
-export function InputDate() {
-  const [date, setDate] = useState<Date | null>(null);
+export function InputArrayText<T>({
+  placeholder,
+  type = "text",
+  name,
+  loading = false,
+  setValue,
+  value,
+}: {
+  placeholder: string;
+  type?: "text" | "password" | "email" | "number";
+  name: keyof T;
+  loading?: boolean;
+  setValue: (field: keyof T, value: string | number) => void;
+  value: string | number | undefined;
+}) {
+  const keyboardType = {
+    text: "default",
+    password: "default",
+    email: "email-address",
+    number: "number-pad",
+  }[type];
+
+  return (
+    <TextInput
+      className="h-12 px-3 leading-5 text-lg bg-gray-100 rounded-md text-gray-900 border-2 border-gray-100 focus:border-gray-500"
+      placeholder={placeholder}
+      placeholderTextColor={"#6b7280"}
+      secureTextEntry={type === "password"}
+      autoCapitalize={
+        type === "password" || type === "email" ? "none" : "sentences"
+      }
+      keyboardType={keyboardType as KeyboardTypeOptions}
+      onChangeText={(text) =>
+        setValue(name, type === "number" ? Number(text) : text)
+      }
+      value={value?.toString() ?? ""}
+      editable={!loading}
+    />
+  );
+}
+
+export function InputDate<T>({
+  name,
+  loading = false,
+  setValue,
+  value,
+}: {
+  name: keyof T;
+  loading?: boolean;
+  setValue: React.Dispatch<React.SetStateAction<T>>;
+  value: Date | null;
+}) {
   const [showDate, setShowDate] = useState(false);
+
   return (
     <>
-      <TextInput
-        className="h-12 px-3 leading-5 text-lg bg-gray-100 rounded-md text-gray-900 border-2 border-gray-100"
-        placeholder={"--/--/----"}
-        placeholderTextColor={"#111827"}
-        editable={false}
-        onPress={() => setShowDate(true)}
-        value={
-          date
-            ? `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
-            : ""
-        }
-      />
+      <Pressable onPress={!loading ? () => setShowDate(true) : undefined}>
+        <TextInput
+          className="h-12 px-3 leading-5 text-lg bg-gray-100 rounded-md text-gray-900 border-2 border-gray-100"
+          placeholder={"--/--/----"}
+          placeholderTextColor={"#111827"}
+          editable={false}
+          onPress={() => setShowDate(true)}
+          value={
+            value
+              ? `${value.getDate()}/${value.getMonth() + 1}/${value.getFullYear()}`
+              : ""
+          }
+        />
+      </Pressable>
       {showDate && (
         <DateTimePickerModal
           mode="date"
           display="inline"
           isVisible={showDate}
           onConfirm={(date) => {
-            setDate(date);
             setShowDate(false);
+            setValue((prev) => ({
+              ...prev,
+              [name]: date,
+            }));
           }}
           onCancel={() => setShowDate(false)}
           cancelTextIOS="Cerrar"
@@ -117,7 +176,7 @@ export function InputTextArea<T>({
   name: keyof T;
   loading?: boolean;
   setValue: React.Dispatch<React.SetStateAction<T>>;
-  value: string;
+  value: string | undefined;
 }) {
   return (
     <TextInput
@@ -150,12 +209,7 @@ export function InputTimeAndDate<T>({
   setValue: React.Dispatch<React.SetStateAction<T>>;
   value: Date | null;
 }) {
-  const [date, setDate] = useState<Date | null>(null);
   const [showDate, setShowDate] = useState(false);
-
-  useEffect(() => {
-    setDate(value);
-  }, [value]);
 
   return (
     <>
@@ -166,8 +220,8 @@ export function InputTimeAndDate<T>({
           placeholderTextColor={"#111827"}
           editable={false}
           value={
-            date
-              ? `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} - ${date.getHours()}:${date.getMinutes()} ${date.getHours() >= 12 ? "p.m." : "a.m."}`
+            value
+              ? `${value.getDate()}/${value.getMonth() + 1}/${value.getFullYear()} - ${value.getHours()}:${value.getMinutes()} ${value.getHours() >= 12 ? "p.m." : "a.m."}`
               : ""
           }
         />
@@ -178,7 +232,6 @@ export function InputTimeAndDate<T>({
           display="inline"
           isVisible={showDate}
           onConfirm={(date) => {
-            setDate(date);
             setShowDate(false);
             setValue((prev) => ({
               ...prev,

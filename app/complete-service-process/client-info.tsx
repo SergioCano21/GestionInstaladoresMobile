@@ -13,8 +13,9 @@ import {
 import { InputText, InputTextArea, Label } from "@/components/ui/Inputs";
 import OverScrollBackground from "@/components/ui/OverScrollBackground";
 import { Colors } from "@/constants/Colors";
+import { useFormData } from "@/provider/FormProvider";
 import { Stack, useRouter } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Switch, Text, View } from "react-native";
 
 const CARD_CONTENT_CLASSES = "gap-3";
@@ -22,11 +23,22 @@ const INPUT_CONTENT_CLASSES = "gap-1";
 
 export default function ClientInfo() {
   const router = useRouter();
+  const { data, setData } = useFormData();
   const [isClient, setIsClient] = useState(true);
+  const [canContinue, setCanContinue] = useState(false);
 
   const goToClientSignature = () => {
     router.push("./client-signature");
   };
+
+  useEffect(() => {
+    const isValid =
+      data.clientEmail &&
+      data.clientComments &&
+      (isClient || (data.secondaryClientName && data.relationshipWithClient));
+
+    setCanContinue(Boolean(isValid));
+  }, [data, isClient]);
 
   return (
     <Screen>
@@ -38,7 +50,13 @@ export default function ClientInfo() {
           <CardHeader Icon={MailIcon}>Correo electrónico</CardHeader>
           <View className={INPUT_CONTENT_CLASSES}>
             <Label>Correo electrónico *</Label>
-            <InputText placeholder="example@gmail.com" />
+            <InputText
+              type="email"
+              name={"clientEmail"}
+              setValue={setData}
+              value={data.clientEmail}
+              placeholder="example@gmail.com"
+            />
           </View>
         </View>
       </Card>
@@ -51,7 +69,12 @@ export default function ClientInfo() {
           </CardHeader>
           <View className={INPUT_CONTENT_CLASSES}>
             <Label>Comentarios sobre su experiencia con el servicio *</Label>
-            <InputTextArea placeholder="Describe tu experiencia con el servicio de instalación. ¿Alguna sugerencia?" />
+            <InputTextArea
+              name={"clientComments"}
+              setValue={setData}
+              value={data.clientComments}
+              placeholder="Describe tu experiencia con el servicio de instalación. ¿Alguna sugerencia?"
+            />
           </View>
         </View>
       </Card>
@@ -64,8 +87,8 @@ export default function ClientInfo() {
           </CardHeader>
           <View className="py-3 px-3 leading-5 text-lg bg-gray-100 rounded-md text-gray-900 border-2 border-gray-100 justify-center">
             <Text className="text-gray-700">
-              <Text className="font-bold">Cliente registrado:</Text> NOMBRE
-              CLIENTE
+              <Text className="font-bold">Cliente registrado: </Text>
+              {data.clientName}
             </Text>
           </View>
           <View className="flex-row items-center gap-3">
@@ -75,7 +98,7 @@ export default function ClientInfo() {
               trackColor={{ true: Colors.black.default }}
               style={{ transform: [{ scaleX: 0.9 }, { scaleY: 0.9 }] }}
             />
-            <Label>Soy NOMBRE CLIENTE (el cliente registrado)</Label>
+            <Label>Soy {data.clientName} (el cliente registrado)</Label>
           </View>
 
           {/* Client relationship with registered client */}
@@ -84,11 +107,21 @@ export default function ClientInfo() {
               <View className={CARD_CONTENT_CLASSES}>
                 <View className={INPUT_CONTENT_CLASSES}>
                   <Label>Su nombre completo *</Label>
-                  <InputText placeholder="Nombre completo" />
+                  <InputText
+                    name={"secondaryClientName"}
+                    setValue={setData}
+                    value={data.secondaryClientName}
+                    placeholder="Nombre completo"
+                  />
                 </View>
                 <View className={INPUT_CONTENT_CLASSES}>
-                  <Label>Cuál es su relación con NOMBRE CLIENTE *</Label>
-                  <InputText placeholder="Ej. Esposo/a, Hijo/a, Inquilino/a, etc." />
+                  <Label>Cuál es su relación con {data.clientName} *</Label>
+                  <InputText
+                    name={"relationshipWithClient"}
+                    setValue={setData}
+                    value={data.relationshipWithClient}
+                    placeholder="Ej. Esposo/a, Hijo/a, Inquilino/a, etc."
+                  />
                 </View>
               </View>
             </Card>
@@ -108,10 +141,10 @@ export default function ClientInfo() {
 
       {/* Button continue */}
       <BottomActionBar>
-        {false ? (
-          <DisabledButton>Continuar</DisabledButton>
-        ) : (
+        {canContinue ? (
           <PrimaryButton onPress={goToClientSignature}>Continuar</PrimaryButton>
+        ) : (
+          <DisabledButton>Continuar</DisabledButton>
         )}
 
         {/* Extra bottom background */}

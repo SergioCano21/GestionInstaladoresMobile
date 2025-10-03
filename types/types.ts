@@ -1,6 +1,6 @@
 export interface Login {
-  installerId: number;
-  password: string;
+  installerId?: number;
+  password?: string;
 }
 
 export interface LoginResponse {
@@ -37,24 +37,29 @@ export interface Service {
   };
 }
 
-export interface FormData {
+export interface ServiceFormData {
+  folio?: number;
+  clientName?: string;
   startTime?: Date;
   endTime?: Date;
   installerName?: string;
-  installedProduct?: {
-    installedProduct?: string;
-    installedIn?: string;
-    quantity?: number;
-    specification?: string;
-    serialNumber?: string;
-  }[];
+  installedProduct: InstalledProduct[];
   recommendations?: string;
   clientComments?: string;
-  images?: string[];
+  images: string[];
   clientSignature?: string;
   isClientAbsent?: boolean;
   relationshipWithClient?: string;
   secondaryClientName?: string;
+  clientEmail?: string;
+}
+
+export interface InstalledProduct {
+  installedProduct?: string;
+  installedIn?: string;
+  quantity?: number;
+  specification?: string;
+  serialNumber?: string;
 }
 
 export interface Profile {

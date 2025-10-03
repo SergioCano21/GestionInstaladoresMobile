@@ -11,14 +11,14 @@ import CardHeader from "@/components/ui/CardHeader";
 import { ImageIcon, InfoIcon, XIcon } from "@/components/ui/Icons";
 import OverScrollBackground from "@/components/ui/OverScrollBackground";
 import { Colors } from "@/constants/Colors";
+import { useFormData } from "@/provider/FormProvider";
 import * as ImagePicker from "expo-image-picker";
 import { Stack, useRouter } from "expo-router";
-import { useState } from "react";
 import { Alert, Image, TouchableOpacity, View } from "react-native";
 
 export default function ImagesScreen() {
   const router = useRouter();
-  const [images, setImages] = useState<string[]>([]);
+  const { data, setData } = useFormData();
 
   const goToServiceInfo = () => {
     router.push("./service-info");
@@ -37,14 +37,17 @@ export default function ImagesScreen() {
     });
 
     if (!result.canceled) {
-      if (images.length >= 6) {
+      if (data.images.length >= 6) {
         Alert.alert(
           "Límite alcanzado",
           "Elimina imágenes para seguir subiendo"
         );
         return;
       }
-      setImages([...images, result.assets[0].uri]);
+      setData((prev) => ({
+        ...prev,
+        images: [...prev.images, result.assets[0].uri],
+      }));
     }
   };
 
@@ -56,22 +59,25 @@ export default function ImagesScreen() {
     });
 
     if (!result.canceled) {
-      if (images.length >= 6) {
+      if (data.images.length >= 6) {
         Alert.alert(
           "Límite alcanzado",
           "Elimina imágenes para seguir subiendo"
         );
         return;
       }
-      setImages([...images, result.assets[0].uri]);
+      setData((prev) => ({
+        ...prev,
+        images: [...prev.images, result.assets[0].uri],
+      }));
     }
   };
 
   const removeImage = (index: number) => {
-    setImages((prevImages) => {
-      const notRemoved = [...prevImages];
+    setData((prev) => {
+      const notRemoved = [...prev.images];
       notRemoved.splice(index, 1);
-      return notRemoved;
+      return { ...prev, images: notRemoved };
     });
   };
 
@@ -99,17 +105,17 @@ export default function ImagesScreen() {
         />
 
         {/* Empty state */}
-        {images.length === 0 && <EvidencesEmptyState />}
+        {data.images.length === 0 && <EvidencesEmptyState />}
 
         {/* Photos added */}
-        {images.length !== 0 && (
+        {data.images.length !== 0 && (
           <>
             <View className="mt-2 mb-4">
               <CardHeader Icon={ImageIcon}>
-                Fotos Seleccionadas ({images.length})
+                Fotos Seleccionadas ({data.images.length})
               </CardHeader>
               <View className="flex-row flex-wrap justify-between mt-4">
-                {images.map((uri, i) => (
+                {data.images.map((uri, i) => (
                   <View key={i} className="w-[48%] mb-4">
                     <Image
                       source={{ uri }}
@@ -132,7 +138,7 @@ export default function ImagesScreen() {
 
             {/* Button continue */}
             <BottomActionBar>
-              {images.length < 3 ? (
+              {data.images.length < 3 ? (
                 <DisabledButton>Continuar</DisabledButton>
               ) : (
                 <PrimaryButton onPress={goToServiceInfo}>

@@ -1,5 +1,6 @@
 import { Colors } from "@/constants/Colors";
 import { AuthProvider, useAuth } from "@/provider/AuthProvider";
+import { FormProvider } from "@/provider/FormProvider";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useFonts } from "expo-font";
@@ -55,8 +56,10 @@ export default function RootLayout() {
       <BottomSheetModalProvider>
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
-            <InitialLayout />
-            <StatusBar style="dark" />
+            <FormProvider>
+              <InitialLayout />
+              <StatusBar style="dark" />
+            </FormProvider>
           </AuthProvider>
         </QueryClientProvider>
       </BottomSheetModalProvider>

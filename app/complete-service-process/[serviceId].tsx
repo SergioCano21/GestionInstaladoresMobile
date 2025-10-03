@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/SwipeButton";
 import { Colors } from "@/constants/Colors";
 import { QUERY_KEYS, STATUS } from "@/constants/Constants";
+import { useFormData } from "@/provider/FormProvider";
 import { Service, Status } from "@/types/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
@@ -34,21 +35,25 @@ export default function ServiceDetail() {
   const queryClient = useQueryClient();
   const router = useRouter();
   const [resetKey, setResetKey] = useState<number>(0);
+  const { setData, resetData } = useFormData();
 
   const service = queryClient
     .getQueryData<Service[]>([QUERY_KEYS.SERVICES, QUERY_KEYS.ACTIVE])
     ?.find((s) => s._id === serviceId);
 
-  const mutation = useMutation({ mutationFn: apiUpdateService });
+  const mutation = useMutation({
+    mutationFn: apiUpdateService,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.SERVICES, QUERY_KEYS.ACTIVE],
+      });
+    },
+  });
 
   const handleUpdate = async (status: Status) => {
     try {
       if (mutation.isPending) return;
-
       await mutation.mutateAsync({ id: serviceId as string, status });
-      queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.SERVICES, QUERY_KEYS.ACTIVE],
-      });
       router.dismiss();
     } catch (error: any) {
       Alert.alert("Ocurrió un error", error.message);
@@ -58,6 +63,12 @@ export default function ServiceDetail() {
   };
 
   const handleComplete = () => {
+    resetData();
+    setData((prev) => ({
+      ...prev,
+      clientName: service?.client,
+      folio: service?.folio,
+    }));
     router.push("./photo-evidences");
   };
 
@@ -126,7 +137,7 @@ export default function ServiceDetail() {
           <View className={CARD_CONTENT_CLASSES}>
             <CardHeader Icon={UserIcon}>Información del Cliente</CardHeader>
             <View>
-              <DetailsTitle>Nombres</DetailsTitle>
+              <DetailsTitle>Nombre</DetailsTitle>
               <DetailsInfo>{service?.client}</DetailsInfo>
             </View>
             <View>

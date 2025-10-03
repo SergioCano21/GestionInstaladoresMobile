@@ -10,6 +10,7 @@ import CardHeader from "@/components/ui/CardHeader";
 import CardTitle from "@/components/ui/CardTitle";
 import { FileSignatureIcon, RotateCcwIcon } from "@/components/ui/Icons";
 import OverScrollBackground from "@/components/ui/OverScrollBackground";
+import { useFormData } from "@/provider/FormProvider";
 import { Stack, useRouter } from "expo-router";
 import { useRef, useState } from "react";
 import { Text, View } from "react-native";
@@ -18,6 +19,8 @@ import SignatureCanvas from "react-native-signature-canvas";
 export default function ClientSignature() {
   const [scrollEnabled, setScrollEnabled] = useState(true);
   const [canContinue, setCanContinue] = useState(false);
+  const { data, setData } = useFormData();
+
   const signatureRef = useRef<any>(null);
 
   const router = useRouter();
@@ -37,8 +40,9 @@ export default function ClientSignature() {
     });
   };
 
-  const handleSignature = () => {
-    console.log("Tiene algo");
+  const handleSignature = (signature: string) => {
+    const cleanedSign = signature.replace("data:image/png;base64,", "");
+    setData((prev) => ({ ...prev, clientSignature: cleanedSign }));
   };
   const handleClear = () => {
     signatureRef.current?.clearSignature();
@@ -54,14 +58,15 @@ export default function ClientSignature() {
         <View className="gap-3 items-center">
           <CardTitle>Confirmación de Término de Servicio</CardTitle>
           <Text className="text-gray-600">
-            <Text className="font-bold">Cliente registrado:</Text> NOMBRE
-            CLIENTE
+            <Text className="font-bold">Cliente registrado:</Text>
+            {data.clientName}
           </Text>
           <Text className="text-gray-600">
             <Text className="font-bold">Fecha:</Text> {getCurrentDate()}
           </Text>
           <Text className="text-gray-600">
-            <Text className="font-bold">Folio de Servicio:</Text> #1234
+            <Text className="font-bold">Folio de Servicio:</Text>#
+            {data.clientName}
           </Text>
         </View>
       </Card>
@@ -104,6 +109,7 @@ export default function ClientSignature() {
                   setCanContinue(true);
                 }}
                 onEnd={() => setScrollEnabled(true)}
+                onEmpty={() => setScrollEnabled(true)}
               />
             </View>
           </Card>

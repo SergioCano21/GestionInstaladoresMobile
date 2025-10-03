@@ -42,7 +42,6 @@ export const apiDeleteBlocker = async (id: string) => {
 
 export const apiEditBlocker = async (id: string, data: BlockerForm) => {
   try {
-    console.log(data);
     await api.put(`${API_SCHEDULES_URL}/${id}`, data);
     console.log("edit blocker");
   } catch (error: any) {

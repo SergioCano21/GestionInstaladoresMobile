@@ -10,7 +10,7 @@ import {
   BottomSheetModal,
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import { Alert, View } from "react-native";
 import { PrimaryButton, RedButton } from "./ui/Buttons";
@@ -36,47 +36,44 @@ export default function BlockerModal({ isVisible, showModal, data }: Props) {
   const [loading, setLoading] = useState<boolean>(false);
   const queryClient = useQueryClient();
 
-  const onSubmit = async () => {
-    setLoading(true);
-
-    try {
-      await apiAddBlocker(form);
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SCHEDULE] });
+  const addMutation = useMutation({
+    mutationFn: apiAddBlocker,
+    onMutate: () => setLoading(true),
+    onSuccess: () => {
       showModal(false);
-    } catch (error: any) {
-      Alert.alert("Error", error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const onEdit = async () => {
-    setLoading(true);
-
-    try {
-      await apiEditBlocker(data?._id!, form);
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SCHEDULE] });
-      showModal(false);
-    } catch (error: any) {
-      Alert.alert("Error", error.message);
-    } finally {
       setLoading(false);
-    }
-  };
+    },
+    onError: (error: any) => Alert.alert("Error", error.message),
+  });
 
-  const onDelete = async () => {
-    setLoading(true);
-
-    try {
-      await apiDeleteBlocker(data?._id!);
+  const editMutation = useMutation({
+    mutationFn: ({ id, data }: { id: string; data: BlockerForm }) =>
+      apiEditBlocker(id, data),
+    onMutate: () => setLoading(true),
+    onSuccess: () => {
+      showModal(false);
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SCHEDULE] });
-      showModal(false);
-    } catch (error: any) {
-      Alert.alert("Error", error.message);
-    } finally {
       setLoading(false);
-    }
-  };
+    },
+    onError: (error: any) => Alert.alert("Error", error.message),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => apiDeleteBlocker(id),
+    onMutate: () => setLoading(true),
+    onSuccess: () => {
+      showModal(false);
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SCHEDULE] });
+      setLoading(true);
+    },
+    onError: (error: any) => Alert.alert("Error", error.message),
+  });
+
+  const handleAdd = () => addMutation.mutate(form);
+  const handleEdit = () =>
+    data?._id && editMutation.mutate({ id: data._id, data: form });
+  const handleDelete = () => data?._id && deleteMutation.mutate(data._id);
 
   useEffect(() => {
     if (isVisible) {
@@ -154,18 +151,18 @@ export default function BlockerModal({ isVisible, showModal, data }: Props) {
             {data ? (
               <View className="flex-row gap-3">
                 <View className="flex-1">
-                  <RedButton loading={loading} onPress={onDelete}>
+                  <RedButton loading={loading} onPress={handleDelete}>
                     Eliminar
                   </RedButton>
                 </View>
                 <View className="flex-1">
-                  <PrimaryButton loading={loading} onPress={onEdit}>
+                  <PrimaryButton loading={loading} onPress={handleEdit}>
                     Editar
                   </PrimaryButton>
                 </View>
               </View>
             ) : (
-              <PrimaryButton loading={loading} onPress={onSubmit}>
+              <PrimaryButton loading={loading} onPress={handleAdd}>
                 Agregar Bloqueo
               </PrimaryButton>
             )}
