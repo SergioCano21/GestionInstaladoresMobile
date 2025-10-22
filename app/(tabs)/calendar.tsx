@@ -41,7 +41,12 @@ export default function Calendar() {
     });
   }, [navigation]);
 
-  const { data: sections, isLoading } = useQuery<Section[]>({
+  const {
+    data: sections,
+    isLoading,
+    refetch,
+    isRefetching,
+  } = useQuery<Section[]>({
     queryKey: [QUERY_KEYS.SCHEDULE],
     queryFn: apiGetSchedules,
   });
@@ -66,25 +71,31 @@ export default function Calendar() {
     setModalVisible(true);
   };
 
+  const onDateChanged = useCallback((date: string) => {
+    setSelectedDate(date);
+  }, []);
+
+  const onRefresh = useCallback(() => {
+    refetch();
+  }, [refetch]);
+
   useFocusEffect(
     useCallback(() => {
       return () => setSelectedDate(today);
     }, [today])
   );
 
-  console.log(selectedDate);
   if (isLoading)
     return (
       <Screen>
         <LoadingSpinner />
       </Screen>
     );
-  console.log(selectedDate);
   return (
     <>
       <CalendarProvider
         date={selectedDate}
-        onDateChanged={(date) => setSelectedDate(date)}
+        onDateChanged={onDateChanged}
         className="bg-gray-100"
       >
         <View className="bg-white">
@@ -120,6 +131,8 @@ export default function Calendar() {
               <CalendarItem data={item} onEdit={handleEditBlocker} />
             )
           }
+          onRefresh={onRefresh}
+          refreshing={isRefetching}
         />
       </CalendarProvider>
 

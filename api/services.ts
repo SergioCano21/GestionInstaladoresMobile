@@ -9,7 +9,6 @@ export const apiGetServices = async (
 ): Promise<Service[]> => {
   try {
     const response = await api.get(`${API_SERVICES_URL}/${status}`);
-    console.log(status);
 
     return transformServices({ services: response.data.services });
   } catch (error: any) {

@@ -1,3 +1,4 @@
+import { apiCreateReceipt } from "@/api/receipt";
 import Screen from "@/components/Screen";
 import BottomActionBar from "@/components/ui/BottomActionBar";
 import {
@@ -10,16 +11,19 @@ import CardHeader from "@/components/ui/CardHeader";
 import CardTitle from "@/components/ui/CardTitle";
 import { FileSignatureIcon, RotateCcwIcon } from "@/components/ui/Icons";
 import OverScrollBackground from "@/components/ui/OverScrollBackground";
+import { QUERY_KEYS } from "@/constants/Constants";
 import { useFormData } from "@/provider/FormProvider";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Stack, useRouter } from "expo-router";
 import { useRef, useState } from "react";
-import { Text, View } from "react-native";
+import { Alert, Text, View } from "react-native";
 import SignatureCanvas from "react-native-signature-canvas";
 
 export default function ClientSignature() {
   const [scrollEnabled, setScrollEnabled] = useState(true);
   const [canContinue, setCanContinue] = useState(false);
   const { data, setData } = useFormData();
+  const queryClient = useQueryClient();
 
   const signatureRef = useRef<any>(null);
 
@@ -41,13 +45,40 @@ export default function ClientSignature() {
   };
 
   const handleSignature = (signature: string) => {
-    const cleanedSign = signature.replace("data:image/png;base64,", "");
-    setData((prev) => ({ ...prev, clientSignature: cleanedSign }));
+    setData((prev) => ({ ...prev, clientSignature: signature }));
+    const formData = setFormDataBuilder(signature);
+    mutation.mutate(formData);
   };
+
   const handleClear = () => {
     signatureRef.current?.clearSignature();
     setCanContinue(false);
   };
+
+  const setFormDataBuilder = (clientSignature: string) => {
+    const formData = new FormData();
+    data.images.forEach((uri, index) => {
+      formData.append("images", {
+        uri,
+        name: `evidence_${index}.jpg`,
+        type: "image/jpeg",
+      } as any);
+    });
+    formData.append("data", JSON.stringify({ ...data, clientSignature }));
+
+    return formData;
+  };
+
+  const mutation = useMutation({
+    mutationFn: apiCreateReceipt,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.SERVICES],
+      });
+      goToActiveServices();
+    },
+    onError: (error: any) => Alert.alert("Error", error.message),
+  });
 
   return (
     <Screen scrollEnabled={scrollEnabled}>
@@ -65,8 +96,7 @@ export default function ClientSignature() {
             <Text className="font-bold">Fecha:</Text> {getCurrentDate()}
           </Text>
           <Text className="text-gray-600">
-            <Text className="font-bold">Folio de Servicio:</Text>#
-            {data.clientName}
+            <Text className="font-bold">Folio de Servicio:</Text>#{data.folio}
           </Text>
         </View>
       </Card>
@@ -123,10 +153,8 @@ export default function ClientSignature() {
       <BottomActionBar>
         {canContinue ? (
           <PrimaryButton
-            onPress={() => {
-              signatureRef.current?.readSignature();
-              goToActiveServices();
-            }}
+            onPress={() => signatureRef.current?.readSignature()}
+            loading={mutation.isPending}
           >
             Finalizar Servicio
           </PrimaryButton>

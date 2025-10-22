@@ -8,6 +8,7 @@ interface FormContextType {
 }
 
 const initialState: ServiceFormData = {
+  serviceId: undefined,
   folio: undefined,
   clientName: undefined,
   startTime: undefined,

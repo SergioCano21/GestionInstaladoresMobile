@@ -6,7 +6,6 @@ const API_INSTALLER_URL = "/installer";
 export const apiGetProfile = async (): Promise<Profile> => {
   try {
     const response = await api.get(`${API_INSTALLER_URL}/profile`);
-    console.log("Profile");
     return response.data.installer;
   } catch (error: any) {
     throw new Error(

@@ -66,6 +66,7 @@ export default function ServiceDetail() {
     resetData();
     setData((prev) => ({
       ...prev,
+      serviceId: service?._id,
       clientName: service?.client,
       folio: service?.folio,
     }));

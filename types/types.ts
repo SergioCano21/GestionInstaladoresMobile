@@ -38,6 +38,7 @@ export interface Service {
 }
 
 export interface ServiceFormData {
+  serviceId?: string;
   folio?: number;
   clientName?: string;
   startTime?: Date;

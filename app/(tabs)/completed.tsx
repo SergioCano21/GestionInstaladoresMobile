@@ -10,7 +10,12 @@ import { useCallback } from "react";
 import { FlatList, ListRenderItem } from "react-native";
 
 export default function CompletedServices() {
-  const { data: services, isLoading } = useQuery<Service[]>({
+  const {
+    data: services,
+    isLoading,
+    refetch,
+    isRefetching,
+  } = useQuery<Service[]>({
     queryKey: [QUERY_KEYS.SERVICES, QUERY_KEYS.COMPLETED],
     queryFn: () => apiGetServices("completed"),
   });
@@ -21,6 +26,10 @@ export default function CompletedServices() {
   );
 
   const keyExtractor = useCallback((item: Service) => item._id, []);
+
+  const onRefresh = useCallback(() => {
+    refetch();
+  }, [refetch]);
 
   const renderContent = () => {
     if (isLoading) return <LoadingSpinner />;
@@ -36,5 +45,9 @@ export default function CompletedServices() {
     );
   };
 
-  return <Screen>{renderContent()}</Screen>;
+  return (
+    <Screen onRefresh={onRefresh} refreshing={isRefetching}>
+      {renderContent()}
+    </Screen>
+  );
 }

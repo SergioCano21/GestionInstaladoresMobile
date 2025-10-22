@@ -44,7 +44,10 @@ export default function BlockerModal({ isVisible, showModal, data }: Props) {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SCHEDULE] });
       setLoading(false);
     },
-    onError: (error: any) => Alert.alert("Error", error.message),
+    onError: (error: any) => {
+      Alert.alert("Error", error.message);
+      setLoading(false);
+    },
   });
 
   const editMutation = useMutation({

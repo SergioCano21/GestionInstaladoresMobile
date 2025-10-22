@@ -12,6 +12,7 @@ import { ImageIcon, InfoIcon, XIcon } from "@/components/ui/Icons";
 import OverScrollBackground from "@/components/ui/OverScrollBackground";
 import { Colors } from "@/constants/Colors";
 import { useFormData } from "@/provider/FormProvider";
+import * as ImageManipulator from "expo-image-manipulator";
 import * as ImagePicker from "expo-image-picker";
 import { Stack, useRouter } from "expo-router";
 import { Alert, Image, TouchableOpacity, View } from "react-native";
@@ -22,6 +23,27 @@ export default function ImagesScreen() {
 
   const goToServiceInfo = () => {
     router.push("./service-info");
+  };
+
+  const compressImage = async (uri: string): Promise<string> => {
+    try {
+      console.log("📷 Comprimiendo imagen...");
+
+      const manipulatedImage = await ImageManipulator.manipulateAsync(
+        uri,
+        [{ resize: { width: 1200 } }],
+        {
+          compress: 0.7,
+          format: ImageManipulator.SaveFormat.JPEG,
+        }
+      );
+
+      console.log("✅ Imagen comprimida");
+      return manipulatedImage.uri;
+    } catch (error) {
+      console.error("❌ Error comprimiendo imagen:", error);
+      return uri;
+    }
   };
 
   const pickImageFromCamera = async () => {
@@ -44,9 +66,11 @@ export default function ImagesScreen() {
         );
         return;
       }
+
+      const compressedUri = await compressImage(result.assets[0].uri);
       setData((prev) => ({
         ...prev,
-        images: [...prev.images, result.assets[0].uri],
+        images: [...prev.images, compressedUri],
       }));
     }
   };
@@ -66,9 +90,11 @@ export default function ImagesScreen() {
         );
         return;
       }
+
+      const compressedUri = await compressImage(result.assets[0].uri);
       setData((prev) => ({
         ...prev,
-        images: [...prev.images, result.assets[0].uri],
+        images: [...prev.images, compressedUri],
       }));
     }
   };

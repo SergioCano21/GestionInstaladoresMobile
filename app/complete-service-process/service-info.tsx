@@ -65,6 +65,7 @@ export default function ServiceInfo() {
       data.startTime &&
       data.endTime &&
       data.installerName &&
+      data.recommendations &&
       data.installedProduct.length > 0 &&
       data.installedProduct.every(
         (product) =>
@@ -180,7 +181,7 @@ export default function ServiceInfo() {
         <View className={CARD_CONTENT_CLASSES}>
           <CardHeader Icon={WrenchIcon}>Recomendaciones</CardHeader>
           <View className={INPUT_CONTENT_CLASSES}>
-            <Label>Recomendaciones de Uso</Label>
+            <Label>Recomendaciones de Uso *</Label>
             <InputTextArea
               name={"recommendations"}
               value={data.recommendations}
